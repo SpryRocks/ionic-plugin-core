@@ -2,15 +2,15 @@ package com.ionic.plugin.core.actions
 
 import com.ionic.plugin.core.PluginException
 import com.ionic.plugin.core.Registration
-import com.ionic.plugin.core.base.CallbackContext
+import com.ionic.plugin.core.base.CallContext
 import kotlinx.serialization.json.JsonArray
 import kotlin.reflect.KClass
 
-abstract class Factory(baseActionCallback: BaseAction.Callback, baseActionDelegate: BaseAction.Delegate) :
+abstract class Factory(baseActionCallback: BaseAction.Callback, baseActionDelegate: Delegate) :
     Registration {
     private val actions: MutableMap<String, KClass<out BaseAction<*>>> = HashMap()
     private val baseActionCallback: BaseAction.Callback
-    private val baseActionDelegate: BaseAction.Delegate
+    private val baseActionDelegate: Delegate
 
     init {
         this.baseActionCallback = baseActionCallback
@@ -22,7 +22,7 @@ abstract class Factory(baseActionCallback: BaseAction.Callback, baseActionDelega
     }
 
     @Throws(PluginException::class)
-    abstract fun createAction(action: String, args: JsonArray?, callbackContext: CallbackContext): BaseAction<*>?;
+    abstract fun createAction(action: String, args: JsonArray?, callbackContext: CallContext): BaseAction<*>?;
 
 //    @Throws(PluginException::class)
 //    fun createAction(action: String, args: JSONArray?, callbackContext: CallbackContext): BaseAction? {

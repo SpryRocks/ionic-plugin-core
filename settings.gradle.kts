@@ -1,3 +1,3 @@
 rootProject.name = "IonicPluginCore"
 
-include(":Core")
+include(":Core", ":Android")

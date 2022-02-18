@@ -1,28 +1,32 @@
 package com.ionic.plugin.core.actions
 
 import com.ionic.plugin.core.PluginException
-import com.ionic.plugin.core.base.CallbackContext
-import com.ionic.plugin.core.base.PluginResult
+import com.ionic.plugin.core.base.CallContext
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
 
 abstract class BaseAction<TDelegate : Delegate>
-protected constructor()
     : Action {
     private val _args: JsonArray? = null
 
     var callback: Callback? = null
 
-    var _delegate: TDelegate? = null
-    var callbackContext: CallbackContext? = null
+    private var _delegate: TDelegate? = null
+    var _call: CallContext? = null
 
     val delegate: TDelegate
         get() { return _delegate!! }
+
+    internal fun initialize(delegate: TDelegate, call: CallContext) {
+        _delegate = delegate
+        _call = call
+    }
 
     private val _lock = Any()
 
     //@Volatile
     private var state = State.NONE
+
     fun run() {
         //synchronized(_lock) {
         if (state != State.NONE) {
@@ -42,9 +46,9 @@ protected constructor()
         try {
             action.execute()
         } catch (e: PluginException) {
-            resultError(e)
+            error(e)
         } catch (e: Exception) {
-            resultError(PluginException(e.message, e))
+            error(PluginException(e.message, e))
         }
     }
 
@@ -52,35 +56,35 @@ protected constructor()
     protected abstract fun onExecute()
     protected abstract fun resultSuccess();
 
-    protected fun resultSuccess(message: Int) {
-        result(PluginResult(PluginResult.Status.OK, message), true)
-    }
-
-    protected fun resultSuccess(message: String) {
-        result(PluginResult(PluginResult.Status.OK, message), true)
-    }
-
-    protected fun resultSuccess(jsonObject: JsonObject) {
-        result(PluginResult(PluginResult.Status.OK, jsonObject), true)
-    }
-
-    protected fun resultError(jsonObject: JsonObject) {
-        result(PluginResult(PluginResult.Status.ERROR, jsonObject), true)
-    }
-
-    protected fun resultError(message: String) {
-        result(PluginResult(PluginResult.Status.ERROR, message), true)
-    }
-
-    protected fun resultError(e: PluginException) {
-        result(delegate!!.errorMapper.map(e), true)
-    }
-
     protected fun success() {
         resultSuccess()
     }
 
-    protected abstract fun result(pluginResult: PluginResult, finish: Boolean);
+    protected fun success(message: Int) {
+        result(CallContext.Result(CallContext.Result.Status.OK, message), true)
+    }
+
+    protected fun success(message: String) {
+        result(CallContext.Result(CallContext.Result.Status.OK, message), true)
+    }
+
+    protected fun success(jsonObject: JsonObject) {
+        result(CallContext.Result(CallContext.Result.Status.OK, jsonObject), true)
+    }
+
+    protected fun error(jsonObject: JsonObject) {
+        result(CallContext.Result(CallContext.Result.Status.ERROR, jsonObject), true)
+    }
+
+    protected fun error(message: String) {
+        result(CallContext.Result(CallContext.Result.Status.ERROR, message), true)
+    }
+
+    protected fun error(e: PluginException) {
+        result(delegate.errorMapper.map(e), true)
+    }
+
+    protected abstract fun result(result: CallContext.Result, finish: Boolean);
 
 //    protected fun result(pluginResult: PluginResult, finish: Boolean) {
 //        synchronized(_lock) {
@@ -102,7 +106,7 @@ protected constructor()
     }
 
     private val isRunning: Boolean
-        private get() = state == State.RUNNING
+        get() = state == State.RUNNING
 
 //    @get:NonNull
 //    protected val context: Context

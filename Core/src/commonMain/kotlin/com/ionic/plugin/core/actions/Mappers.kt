@@ -1,30 +1,24 @@
 package com.ionic.plugin.core.actions
 
 import com.ionic.plugin.core.PluginException
-import com.ionic.plugin.core.base.PluginResult
-import kotlinx.serialization.json.JsonObject
+import com.ionic.plugin.core.base.CallContext
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.encodeToJsonElement
 
 object Mappers {
     @Throws(PluginException::class)
-    fun mapObjectToJson(src: Any): JsonObject {
-//        val gson = Gson()
-//        val jsonString: String = gson.toJson(src)
-//        return try {
-//            JSONObject(jsonString)
-//        } catch (e: JSONException) {
-//            throw PluginException("Cannot convert object to json", e)
-//        }
-
-        throw Exception("Not implemented")
+    fun mapObjectToJson(src: Any): JsonElement {
+        return Json.encodeToJsonElement(src);
     }
 
     interface IErrorMapper {
-        fun map(error: PluginException): PluginResult
+        fun map(error: PluginException): CallContext.Result
     }
 
     class DefaultErrorMapper : IErrorMapper {
-        override fun map(e: PluginException): PluginResult {
-            return PluginResult(PluginResult.Status.ERROR, e.message.orEmpty())
+        override fun map(error: PluginException): CallContext.Result {
+            return CallContext.Result(CallContext.Result.Status.ERROR, error.message.orEmpty())
         }
     }
 }

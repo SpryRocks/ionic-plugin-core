@@ -2,13 +2,14 @@ package com.ionic.plugin.core
 
 import com.cordova.core.actions.LogUtils.debug
 import com.ionic.plugin.core.actions.BaseAction
+import com.ionic.plugin.core.actions.Delegate
 import com.ionic.plugin.core.actions.Factory
 import com.ionic.plugin.core.actions.Mappers
-import com.ionic.plugin.core.base.CallbackContext
+import com.ionic.plugin.core.base.CallContext
 import kotlinx.serialization.json.JsonArray
 
 abstract class Plugin protected constructor(val factory: Factory)
-    : BaseAction.Delegate, BaseAction.Callback {
+    : Delegate, BaseAction.Callback {
     private val _actionsLockObject = Any()
 
     override var errorMapper: Mappers.IErrorMapper = Mappers.DefaultErrorMapper()
@@ -20,13 +21,13 @@ abstract class Plugin protected constructor(val factory: Factory)
 
     protected abstract fun registerActions(factory: Registration?)
 
-    fun execute(action: String, args: JsonArray, callbackContext: CallbackContext): Boolean {
+    fun execute(action: String, args: JsonArray, callbackContext: CallContext): Boolean {
         debug("plugin action: $action, args: $args")
         try {
             val baseAction = factory.createAction(action, args, callbackContext) ?: return false
             setCurrentActionAndRunSafely(baseAction)
         } catch (e: PluginException) {
-            callbackContext.sendPluginResult(errorMapper.map(e))
+            callbackContext.result(errorMapper.map(e))
         }
         return true
     }
