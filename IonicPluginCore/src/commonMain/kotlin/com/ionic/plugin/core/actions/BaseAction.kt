@@ -1,7 +1,6 @@
 package com.ionic.plugin.core.actions
 
 import com.ionic.plugin.core.PluginException
-import com.ionic.plugin.core.base.CallContext
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
 
@@ -9,16 +8,19 @@ abstract class BaseAction<TDelegate : Delegate>
     : Action {
     private val _args: JsonArray? = null
 
-    var callback: Callback? = null
+    internal var _callback: Callback<TDelegate, BaseAction<TDelegate>>? = null
 
-    private var _delegate: TDelegate? = null
-    var _call: CallContext? = null
+    internal var _call: CallContext? = null
+
+    internal var _delegate: TDelegate? = null
+
+    val call: CallContext
+        get() = _call!!
 
     val delegate: TDelegate
-        get() { return _delegate!! }
+        get() = _delegate!!
 
-    internal fun initialize(delegate: TDelegate, call: CallContext) {
-        _delegate = delegate
+    internal fun initialize(call: CallContext) {
         _call = call
     }
 
@@ -83,24 +85,22 @@ abstract class BaseAction<TDelegate : Delegate>
         result(delegate.errorMapper.map(e), true)
     }
 
-    protected abstract fun result(result: CallContext.Result, finish: Boolean);
-
-//    protected fun result(pluginResult: PluginResult, finish: Boolean) {
+    protected fun result(result: CallContext.Result, finish: Boolean) {
 //        synchronized(_lock) {
-//            if (!isRunning) return
-//            if (!finish) {
+        if (!isRunning) return
+        if (!finish) {
 //                pluginResult.setKeepCallback(true)
-//            }
-//            callbackContext.sendPluginResult(pluginResult)
-//            if (finish) {
-//                finish()
-//            }
+        }
+        call.result(result)
+        if (finish) {
+            finish()
+        }
 //        }
-//    }
+    }
 
     private fun finish() {
         cancelTimeout()
-        callback!!.finishActionSafely(this)
+        _callback!!.finishActionSafely(this)
         state = State.FINISHED
     }
 
@@ -118,10 +118,6 @@ abstract class BaseAction<TDelegate : Delegate>
 //            }
 //        })
 //    }
-
-    interface Callback {
-        fun finishActionSafely(action: BaseAction<*>)
-    }
 
 //    @Nullable
 //    private var timeoutTimer: CountDownTimer? = null
@@ -164,5 +160,9 @@ abstract class BaseAction<TDelegate : Delegate>
 
     companion object {
         private val timeoutTimer_lock = Any()
+    }
+
+    interface Callback<TDelegate : Delegate, TAction : BaseAction<TDelegate>> {
+        fun finishActionSafely(action: TAction)
     }
 }

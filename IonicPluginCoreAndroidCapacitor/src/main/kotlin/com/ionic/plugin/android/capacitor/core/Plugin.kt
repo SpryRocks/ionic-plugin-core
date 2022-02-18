@@ -1,19 +1,7 @@
 package com.ionic.plugin.android.capacitor.core
 
-import com.getcapacitor.PluginCall
-import com.ionic.plugin.core.actions.BaseAction
+import com.ionic.plugin.android.capacitor.core.actions.Delegate
 
-abstract class Plugin : com.getcapacitor.Plugin() {
-    protected fun run(action: BaseAction<*>, call: PluginCall) {
-//        initializeAndRun(action, call)
-    }
-
-//    private fun initializeAndRun(action: BaseAction, call: PluginCall) {
-//        action.initialize(this, call)
-////
-////        when (action) {
-////            is SyncAction -> action.runSync()
-////            is AsyncAction -> action.runAsync()
-////        }
-//    }
+abstract class Plugin<TActionKey, TDelegate : Delegate> :
+    com.ionic.plugin.android.core.Plugin<TActionKey, TDelegate>() {
 }

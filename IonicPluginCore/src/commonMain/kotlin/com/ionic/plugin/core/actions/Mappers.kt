@@ -1,7 +1,6 @@
 package com.ionic.plugin.core.actions
 
 import com.ionic.plugin.core.PluginException
-import com.ionic.plugin.core.base.CallContext
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.encodeToJsonElement

@@ -11,6 +11,8 @@ dependencies {
     implementation(project(":IonicPluginCore"))
     implementation(project(":IonicPluginCoreAndroid"))
     implementation(project(":capacitor-android"))
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
+    implementation("androidx.appcompat:appcompat:1.2.0")
 }
 
 android {

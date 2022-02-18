@@ -3,69 +3,48 @@ package com.ionic.plugin.core
 import com.cordova.core.actions.LogUtils.debug
 import com.ionic.plugin.core.actions.BaseAction
 import com.ionic.plugin.core.actions.Delegate
-import com.ionic.plugin.core.actions.Factory
 import com.ionic.plugin.core.actions.Mappers
-import com.ionic.plugin.core.base.CallContext
-import kotlinx.serialization.json.JsonArray
+import com.ionic.plugin.core.actions.CallContext
 
-abstract class Plugin protected constructor(val factory: Factory)
-    : Delegate, BaseAction.Callback {
+abstract class Plugin<TActionKey, TDelegate : Delegate>
+protected constructor(): BaseAction.Callback<TDelegate, BaseAction<TDelegate>> {
     private val _actionsLockObject = Any()
 
-    override var errorMapper: Mappers.IErrorMapper = Mappers.DefaultErrorMapper()
-        protected set
+    protected abstract val delegate: TDelegate;
 
-    protected fun pluginInitialize() {
-        registerActions(factory)
-    }
+    abstract val factory: Factory<TActionKey, TDelegate, BaseAction<TDelegate>>
 
-    protected abstract fun registerActions(factory: Registration?)
-
-    fun execute(action: String, args: JsonArray, callbackContext: CallContext): Boolean {
-        debug("plugin action: $action, args: $args")
+    fun call(action: TActionKey, call: CallContext): Boolean {
+        debug("plugin action: $action")
         try {
-            val baseAction = factory.createAction(action, args, callbackContext) ?: return false
+            val baseAction = factory.createAction(action, call)
             setCurrentActionAndRunSafely(baseAction)
         } catch (e: PluginException) {
-            callbackContext.result(errorMapper.map(e))
+            call.result(delegate.errorMapper.map(e))
         }
         return true
     }
 
     @Throws(PluginException::class)
-    private fun setCurrentActionAndRunSafely(action: BaseAction<*>) {
+    private fun setCurrentActionAndRunSafely(action: BaseAction<TDelegate>) {
 //        synchronized(_actionsLockObject) {
-            beforeActionRun(action)
+        beforeActionRun(action)
 //        }
         action.run()
     }
 
-    override fun finishActionSafely(action: BaseAction<*>) {
+    override fun finishActionSafely(action: BaseAction<TDelegate>) {
 //        synchronized(_actionsLockObject) {
-            actionFinished(action)
+        actionFinished(action)
 //        }
     }
 
-    @Throws(PluginException::class)
-    protected abstract fun beforeActionRun(action: BaseAction<*>)
-    protected abstract fun actionFinished(action: BaseAction<*>)
+    //    @Throws(PluginException::class)
+    protected open fun beforeActionRun(action: BaseAction<TDelegate>) {}
+    protected open fun actionFinished(action: BaseAction<TDelegate>) {}
 
-    //region Action Delegate
-//    val context: Context
-//        get() = cordova.getContext()
-
-//    val threadPool: ExecutorService
-//        get() = cordova.getThreadPool()
-
-//    val activity: Activity
-//        get() = cordova.getActivity()
-
-//    fun startActivityForResult(@NonNull intent: Intent?, requestCode: Int) {
-//        cordova.startActivityForResult(this, intent, requestCode)
-//    }
-
-//    fun finishActivity(requestCode: Int) {
-//        cordova.getActivity().finishActivity(requestCode)
-//    }
-    //endregion
+    private fun setupAction(action: BaseAction<TDelegate>) {
+        action._callback = this
+        action._delegate = delegate
+    }
 }
