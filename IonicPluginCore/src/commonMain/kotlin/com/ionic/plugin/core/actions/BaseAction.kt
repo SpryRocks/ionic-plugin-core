@@ -54,10 +54,9 @@ abstract class BaseAction<TDelegate : Delegate>
 
     @Throws(PluginException::class)
     protected abstract fun onExecute()
-    protected abstract fun resultSuccess();
 
     protected fun success() {
-        resultSuccess()
+        result(CallContext.Result(CallContext.Result.Status.OK), true);
     }
 
     protected fun success(message: Int) {

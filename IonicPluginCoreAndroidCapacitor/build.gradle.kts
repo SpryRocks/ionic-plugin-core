@@ -1,14 +1,16 @@
 
 plugins {
-    kotlin("android") version "1.6.10"
+    kotlin("android")// version "1.6.10"
     id("com.android.library")
 }
 
-group = "android"
+group = "android-capacitor"
 version = "0.0.1"
 
 dependencies {
-    implementation(project(":Core"))
+    implementation(project(":IonicPluginCore"))
+    implementation(project(":IonicPluginCoreAndroid"))
+    implementation(project(":capacitor-android"))
 }
 
 android {

@@ -11,8 +11,10 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/Android" />
-            <option value="$PROJECT_DIR$/Core" />
+            <option value="$PROJECT_DIR$/IonicPluginCore" />
+            <option value="$PROJECT_DIR$/IonicPluginCoreAndroid" />
+            <option value="$PROJECT_DIR$/IonicPluginCoreAndroidCapacitor" />
+            <option value="$PROJECT_DIR$/node_modules/@capacitor/android/capacitor" />
           </set>
         </option>
       </GradleProjectSettings>
