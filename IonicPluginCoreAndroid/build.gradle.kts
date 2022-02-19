@@ -13,7 +13,7 @@ dependencies {
 android {
     compileSdk = 31
     defaultConfig {
-        minSdk = 26
+        minSdk = 22
         targetSdk = 31
     }
     buildTypes {

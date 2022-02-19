@@ -2,9 +2,8 @@ package com.ionic.plugin.android.core
 
 import android.app.Activity
 import android.content.Context
-import com.ionic.plugin.android.core.actions.BaseAction
-import com.ionic.plugin.android.core.actions.Delegate
 import com.ionic.plugin.android.core.actions.WrapperDelegate
+import com.ionic.plugin.core.actions.Delegate
 
 abstract class Plugin<TActionKey, TDelegate : Delegate> :
     com.ionic.plugin.core.Plugin<TActionKey, TDelegate>() {

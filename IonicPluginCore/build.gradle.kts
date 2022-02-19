@@ -10,6 +10,14 @@ kotlin {
 
     }
 
+    iosArm64 {
+
+    }
+
+    iosX64 {
+
+    }
+
     jvm {
 
     }

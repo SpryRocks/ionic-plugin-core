@@ -19,10 +19,15 @@ class CallContext(private val call: PluginCall, wrapperDelegate: WrapperDelegate
 
     override fun result(result: Result) {
         if(result.status == Result.Status.OK){
-            val data = JSObject(result.data.toString())
+            val data = getResultJsonObject(result)
             call.resolve(data)
         } else {
             call.reject("Error")
         }
+    }
+
+    private fun getResultJsonObject(result: Result): JSObject? {
+        if (result.data == null) return null
+        return JSObject(result.data.toString())
     }
 }
