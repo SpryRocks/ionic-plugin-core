@@ -1,6 +1,6 @@
 
 plugins {
-    kotlin("android")// version "1.6.10"
+    kotlin("android")
     id("com.android.library")
 }
 

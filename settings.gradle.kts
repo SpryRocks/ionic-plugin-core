@@ -7,4 +7,4 @@ include(":IonicPluginCore")
 
 include(":IonicPluginCoreAndroid")
 
-include(":IonicPluginCoreAndroidCapacitor")
+include(":IonicPluginCoreCapacitor")

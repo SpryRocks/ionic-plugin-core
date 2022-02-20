@@ -13,7 +13,7 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/IonicPluginCore" />
             <option value="$PROJECT_DIR$/IonicPluginCoreAndroid" />
-            <option value="$PROJECT_DIR$/IonicPluginCoreAndroidCapacitor" />
+            <option value="$PROJECT_DIR$/IonicPluginCoreCapacitor" />
             <option value="$PROJECT_DIR$/node_modules/@capacitor/android/capacitor" />
           </set>
         </option>
