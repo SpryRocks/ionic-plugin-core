@@ -6,20 +6,24 @@ group = "core"
 version = "0.0.1"
 
 kotlin {
-    iosSimulatorArm64 {
+//    iosSimulatorArm64 {
+//
+//    }
+//
+//    iosArm64 {
+//
+//    }
+//
+//    iosX64 {
+//
+//    }
+//
+//    jvm {
+//
+//    }
 
-    }
-
-    iosArm64 {
-
-    }
-
-    iosX64 {
-
-    }
-
-    jvm {
-
+    js(IR) {
+        browser()
     }
 
     sourceSets {

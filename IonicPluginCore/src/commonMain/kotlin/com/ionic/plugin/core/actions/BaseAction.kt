@@ -3,7 +3,9 @@ package com.ionic.plugin.core.actions
 import com.ionic.plugin.core.PluginException
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
+import kotlin.js.JsExport
 
+@JsExport
 abstract class BaseAction<TDelegate : Delegate>
     : Action {
     private val _args: JsonArray? = null
@@ -35,18 +37,9 @@ abstract class BaseAction<TDelegate : Delegate>
             return
         }
         state = State.RUNNING
-        //}
-        executeActionSafe(object : ExecuteAction {
-            @Throws(PluginException::class)
-            override fun execute() {
-                onExecute()
-            }
-        })
-    }
 
-    private fun executeActionSafe(action: ExecuteAction) {
         try {
-            action.execute()
+            onExecute()
         } catch (e: PluginException) {
             error(e)
         } catch (e: Exception) {
@@ -58,34 +51,34 @@ abstract class BaseAction<TDelegate : Delegate>
     protected abstract fun onExecute()
 
     protected fun success() {
-        result(CallContext.Result(CallContext.Result.Status.OK), true);
+        result(CallContextResult(true), true);
     }
 
     protected fun success(message: Int) {
-        result(CallContext.Result(CallContext.Result.Status.OK, message), true)
+        result(CallContextResult(true, message), true)
     }
 
     protected fun success(message: String) {
-        result(CallContext.Result(CallContext.Result.Status.OK, message), true)
+        result(CallContextResult(true, message), true)
     }
 
     protected fun success(jsonObject: JsonObject) {
-        result(CallContext.Result(CallContext.Result.Status.OK, jsonObject), true)
+        result(CallContextResult(true, jsonObject), true)
     }
 
     protected fun error(jsonObject: JsonObject) {
-        result(CallContext.Result(CallContext.Result.Status.ERROR, jsonObject), true)
+        result(CallContextResult(false, jsonObject), true)
     }
 
     protected fun error(message: String) {
-        result(CallContext.Result(CallContext.Result.Status.ERROR, message), true)
+        result(CallContextResult(false, message), true)
     }
 
     protected fun error(e: PluginException) {
         result(delegate.errorMapper.map(e), true)
     }
 
-    protected fun result(result: CallContext.Result, finish: Boolean) {
+    protected fun result(result: CallContextResult, finish: Boolean) {
 //        synchronized(_lock) {
         if (!isRunning) return
         if (!finish) {
@@ -153,16 +146,13 @@ abstract class BaseAction<TDelegate : Delegate>
         NONE, RUNNING, FINISHED
     }
 
-    interface ExecuteAction {
-        @Throws(PluginException::class)
-        fun execute()
-    }
-
     companion object {
         private val timeoutTimer_lock = Any()
     }
 
-    interface Callback<TDelegate : Delegate, TAction : BaseAction<TDelegate>> {
-        fun finishActionSafely(action: TAction)
-    }
+
+}
+
+expect interface Callback<TDelegate : Delegate, TAction : BaseAction<TDelegate>> {
+    fun finishActionSafely(action: TAction)
 }

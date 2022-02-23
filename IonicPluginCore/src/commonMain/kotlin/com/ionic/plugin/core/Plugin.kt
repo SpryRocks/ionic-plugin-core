@@ -1,25 +1,24 @@
 package com.ionic.plugin.core
 
 import com.cordova.core.actions.LogUtils.debug
-import com.ionic.plugin.core.actions.BaseAction
-import com.ionic.plugin.core.actions.Delegate
-import com.ionic.plugin.core.actions.Mappers
-import com.ionic.plugin.core.actions.CallContext
+import com.ionic.plugin.core.actions.*
+import kotlin.js.JsExport
 
+@JsExport
 abstract class Plugin<TActionKey, TDelegate : Delegate>
-protected constructor() : BaseAction.Callback<TDelegate, BaseAction<TDelegate>> {
+protected constructor() : Callback<TDelegate, BaseAction<TDelegate>> {
     private val _actionsLockObject = Any()
 
     protected abstract val delegate: TDelegate;
 
-    abstract val factory: Factory<TActionKey, TDelegate, BaseAction<TDelegate>>
+    abstract fun createAction(action: TActionKey, call: CallContext): BaseAction<TDelegate>
 
     open fun load() {}
 
     fun call(action: TActionKey, call: CallContext): Boolean {
         debug("plugin action: $action")
         try {
-            val baseAction = factory.createAction(action, call)
+            val baseAction = createAction(action, call)
             setCurrentActionAndRunSafely(baseAction, call)
         } catch (e: PluginException) {
             call.result(delegate.errorMapper.map(e))

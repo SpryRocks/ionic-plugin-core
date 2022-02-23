@@ -4,7 +4,7 @@ import com.ionic.plugin.core.PluginException
 
 open class CurrentAction<TAction : Action?>(val _currentActionLock: Any) {
     var currentAction: TAction? = null
-    @Throws(PluginException::class)
+//    @Throws(PluginException::class)
     fun set(action: TAction) {
 //        synchronized(_currentActionLock) {
             if (currentAction != null) {
@@ -28,7 +28,7 @@ open class CurrentAction<TAction : Action?>(val _currentActionLock: Any) {
 //        }
     }
 
-    class Cancelable<TAction : Action.Cancelable?>(currentActionLock: Any) :
+    class Cancelable<TAction : CancelableAction?>(currentActionLock: Any) :
         CurrentAction<TAction>(currentActionLock) {
         fun cancel() {
             var currentAction: TAction
