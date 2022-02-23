@@ -149,10 +149,5 @@ abstract class BaseAction<TDelegate : Delegate>
     companion object {
         private val timeoutTimer_lock = Any()
     }
-
-
 }
 
-expect interface Callback<TDelegate : Delegate, TAction : BaseAction<TDelegate>> {
-    fun finishActionSafely(action: TAction)
-}

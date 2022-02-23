@@ -13,12 +13,12 @@ class CallContext(private val call: PluginCall, wrapperDelegate: WrapperDelegate
         return call.getString(key)
     }
 
-    override fun getObject(key: String): JsonObject? {
-        return Json.decodeFromString(call.getObject(key).toString())
+    override fun getObject(key: String): String? {
+        return call.getObject(key)?.toString()
     }
 
     override fun result(result: CallContextResult) {
-        if(result.ok){
+        if (result.ok) {
             val data = getResultJsonObject(result)
             call.resolve(data)
         } else {
