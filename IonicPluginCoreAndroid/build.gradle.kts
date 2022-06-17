@@ -8,6 +8,7 @@ group = "android"
 version = "0.0.1"
 dependencies {
     implementation(project(":IonicPluginCore"))
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
 }
 
 android {

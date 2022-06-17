@@ -8,6 +8,7 @@ group = "android-capacitor"
 version = "0.0.1"
 
 val enableIos: String by project
+val enableJS: String by project
 
 android {
     compileSdk = 31
@@ -48,8 +49,10 @@ kotlin {
     android {
     }
 
-    js(IR) {
-        browser()
+    if (enableJS == "true") {
+        js(IR) {
+            browser()
+        }
     }
 
     if (enableIos == "true") {
@@ -65,6 +68,7 @@ kotlin {
             dependencies {
                 implementation(project(":IonicPluginCore"))
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
             }
         }
         val androidMain by getting {
@@ -74,9 +78,9 @@ kotlin {
                 implementation("androidx.appcompat:appcompat:1.4.1")
             }
         }
-        val iosSimulatorArm64Main by sourceSets.getting
-        val iosArm64Main by sourceSets.getting
         if (enableIos == "true") {
+            val iosSimulatorArm64Main by sourceSets.getting
+            val iosArm64Main by sourceSets.getting
             val iosMain by sourceSets.creating {
                 dependsOn(commonMain)
                 iosSimulatorArm64Main.dependsOn(this)
