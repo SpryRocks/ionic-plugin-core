@@ -29,8 +29,14 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.2")
+            }
+        }
+        val jsMain by getting {
+            dependsOn(commonMain)
+            dependencies {
+                implementation("org.jetbrains.kotlin:atomicfu:1.6.21") // not working without this line
             }
         }
         val jvmMain by getting
