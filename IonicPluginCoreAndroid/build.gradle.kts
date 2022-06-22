@@ -2,16 +2,18 @@
 plugins {
     kotlin("android")
     id("com.android.library")
+    id("maven-publish")
 }
 
-group = "android"
-version = "0.0.1"
+group = "com.github.SpryRocks"
+
 dependencies {
     implementation(project(":IonicPluginCore"))
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.2")
 }
 
 android {
+    namespace = "com.ionic.plugin.android.core"
     compileSdk = 31
     defaultConfig {
         minSdk = 22
@@ -19,7 +21,7 @@ android {
     }
     buildTypes {
         getByName("release") {
-            isMinifyEnabled = true
+            isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
         }
     }
@@ -30,6 +32,16 @@ android {
     sourceSets {
         getByName("main") {
             java.srcDir("src/main/kotlin")
+        }
+    }
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            create<MavenPublication>("release") {
+                from(components["release"])
+            }
         }
     }
 }
