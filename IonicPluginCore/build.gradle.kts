@@ -1,9 +1,9 @@
 plugins {
     kotlin("multiplatform")
+    id("maven-publish")
 }
 
-group = "core"
-version = "0.0.1"
+group = "com.github.SpryRocks"
 
 val enableIos: String by project
 val enableJS: String by project

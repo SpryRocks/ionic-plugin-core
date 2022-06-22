@@ -1,6 +1,3 @@
-group = "com.ionic.plugin"
-version = "1.0"
-
 buildscript {
     repositories {
         google()

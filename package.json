@@ -1,13 +1,5 @@
 {
   "name": "ionic-plugin-core",
   "version": "0.0.1-alpha.0",
-  "description": "IonicPluginCore",
-  "scripts": {
-  },
-  "dependencies": {
-  },
-  "devDependencies": {
-    "@capacitor/android": "^3.0.0",
-    "@capacitor/ios": "^3.0.0"
-  }
+  "description": "IonicPluginCore"
 }
