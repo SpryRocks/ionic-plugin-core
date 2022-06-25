@@ -1,6 +1,5 @@
 package com.ionic.plugin.core
 
-import com.cordova.core.actions.LogUtils.debug
 import com.ionic.plugin.core.actions.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
@@ -25,7 +24,7 @@ protected constructor() : Callback<TDelegate, BaseAction<TDelegate>>, CoroutineS
         get() = job
 
     fun call(action: TActionKey, call: CallContext): Boolean {
-        debug("plugin action: $action")
+        print("plugin action: $action")
         try {
             val baseAction = createAction(action, call)
             setCurrentActionAndRunSafely(baseAction, call)
@@ -55,8 +54,6 @@ protected constructor() : Callback<TDelegate, BaseAction<TDelegate>>, CoroutineS
     protected open fun actionFinished(action: BaseAction<TDelegate>) {}
 
     private fun setupAction(action: BaseAction<TDelegate>, call: CallContext) {
-        action._callback = this
-        action._delegate = delegate
-        action._call = call
+        action.initialize(call, this, delegate)
     }
 }
