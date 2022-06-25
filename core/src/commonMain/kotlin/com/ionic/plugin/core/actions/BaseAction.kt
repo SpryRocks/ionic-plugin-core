@@ -10,20 +10,20 @@ abstract class BaseAction<TDelegate : Delegate>
     : Action {
     private val _args: JsonArray? = null
 
-    internal var _callback: Callback<TDelegate, BaseAction<TDelegate>>? = null
+    private var _callback: Callback<TDelegate, BaseAction<TDelegate>>? = null
 
-    internal var _call: CallContext? = null
-
-    internal var _delegate: TDelegate? = null
-
-    val call: CallContext
+    private var _call: CallContext? = null
+    protected val call: CallContext
         get() = _call!!
 
+    private var _delegate: TDelegate? = null
     val delegate: TDelegate
         get() = _delegate!!
 
-    internal fun initialize(call: CallContext) {
+    internal fun initialize(call: CallContext, callback: Callback<TDelegate, BaseAction<TDelegate>>, delegate: TDelegate) {
         _call = call
+        _callback = callback
+        _delegate = delegate
     }
 
     private val _lock = Any()
