@@ -5,12 +5,12 @@ import com.spryrocks.kson.JsonObject
 import kotlinx.atomicfu.atomic
 import kotlinx.atomicfu.locks.SynchronizedObject
 import kotlinx.atomicfu.locks.synchronized
-import kotlinx.serialization.json.JsonArray
 import kotlin.js.JsExport
 
 @JsExport
 abstract class BaseAction<TDelegate : Delegate> : Action {
     private var _callback: Callback<TDelegate, BaseAction<TDelegate>>? = null
+    private val callback get() = _callback!!
 
     private var _call: CallContext? = null
     protected val call: CallContext
@@ -44,10 +44,8 @@ abstract class BaseAction<TDelegate : Delegate> : Action {
 
         try {
             executeAsync { onExecute() }
-        } catch (e: PluginException) {
+        } catch (e: Throwable) {
             error(e)
-        } catch (e: Exception) {
-            error(PluginException(e.message, e))
         }
     }
 
@@ -64,50 +62,29 @@ abstract class BaseAction<TDelegate : Delegate> : Action {
     @Throws(PluginException::class)
     protected abstract fun onExecute()
 
-    protected fun success() {
-        result(CallContextResult(true), true);
+    fun success(data: JsonObject? = null, finish: Boolean = true) = result(CallContextResult.success(data), finish)
+
+    fun error(error: Throwable? = null) {
+        result(
+            CallContextResult.error(
+                if (error != null) callback.errorMapper.map(error)
+                else null
+            ),
+            true
+        )
     }
 
-    protected fun success(message: Int) {
-        result(CallContextResult(true, message), true)
-    }
-
-    protected fun success(message: String) {
-        result(CallContextResult(true, message), true)
-    }
-
-    protected fun success(jsonObject: JsonObject) {
-        result(CallContextResult(true, jsonObject), true)
-    }
-
-    protected fun error(jsonObject: JsonObject) {
-        result(CallContextResult(false, jsonObject), true)
-    }
-
-    protected fun error(message: String) {
-        result(CallContextResult(false, message), true)
-    }
-
-    protected fun error(e: PluginException) {
-        result(delegate.errorMapper.map(e), true)
-    }
-
-    protected fun result(result: CallContextResult, finish: Boolean) {
+    private fun result(result: CallContextResult, finish: Boolean) {
         synchronized(_lock) {
             if (!isRunning) return
-            if (!finish) {
-//                pluginResult.setKeepCallback(true)
-            }
-            call.result(result)
-            if (finish) {
-                finish()
-            }
+            call.result(result, finish)
+            if (finish) finish()
         }
     }
 
     private fun finish() {
         cancelTimeout()
-        _callback!!.finishActionSafely(this)
+        callback.finishActionSafely(this)
         state.value = State.FINISHED
     }
 

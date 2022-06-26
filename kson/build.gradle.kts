@@ -34,7 +34,7 @@ kotlin {
             }
         }
         val commonTest by getting {
-            dependsOn(commonMain)
+            apply(plugin = "org.jetbrains.kotlin.plugin.serialization")
             dependencies {
                 implementation(kotlin("test"))
             }

@@ -4,6 +4,10 @@ import com.spryrocks.kson.JsonObject
 
 actual interface CallContext {
     actual fun getString(key: String): String?
+    actual fun getInt(key: String): Int?
     actual fun getObject(key: String): JsonObject?
-    actual fun result(result: CallContextResult)
+    actual fun getBoolean(key: String): Boolean?
+    actual fun getDouble(key: String): Double?
+
+    actual fun result(result: CallContextResult, finish: Boolean)
 }

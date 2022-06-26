@@ -1,25 +1,20 @@
 package com.ionic.plugin.core.actions
 
 import com.ionic.plugin.core.PluginException
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonElement
-import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.encodeToJsonElement
 import kotlin.js.JsExport
 
 @JsExport
-open class Mappers {
+open class Mappers
+
+@JsExport
+interface IErrorMapper {
+    fun map(error: Throwable): PluginException
 }
 
 @JsExport
-abstract class IErrorMapper {
-    abstract fun map(error: PluginException): CallContextResult
-}
-
-@JsExport
-class DefaultErrorMapper : IErrorMapper() {
-    override fun map(error: PluginException): CallContextResult {
-        return CallContextResult(false, error.message.orEmpty())
+class DefaultErrorMapper : IErrorMapper {
+    override fun map(error: Throwable): PluginException {
+        if (error is PluginException) return error
+        return PluginException(error.message, cause = error)
     }
 }
