@@ -1,6 +1,8 @@
 package com.ionic.plugin.core
 
 import com.ionic.plugin.core.actions.*
+import kotlinx.atomicfu.locks.SynchronizedObject
+import kotlinx.atomicfu.locks.synchronized
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Job
@@ -11,7 +13,7 @@ import kotlin.js.JsExport
 @JsExport
 abstract class Plugin<TActionKey, TDelegate : Delegate>
 protected constructor() : Callback<TDelegate, BaseAction<TDelegate>>, CoroutineScope {
-    private val _actionsLockObject = Any()
+    private val _actionsLockObject = SynchronizedObject()
 
     protected abstract val delegate: TDelegate;
 
@@ -37,19 +39,18 @@ protected constructor() : Callback<TDelegate, BaseAction<TDelegate>>, CoroutineS
     @Throws(PluginException::class)
     private fun setCurrentActionAndRunSafely(action: BaseAction<TDelegate>, call: CallContext) {
         setupAction(action, call)
-//        synchronized(_actionsLockObject) {
-        beforeActionRun(action)
-//        }
+        synchronized(_actionsLockObject) {
+            beforeActionRun(action)
+        }
         action.run()
     }
 
     override fun finishActionSafely(action: BaseAction<TDelegate>) {
-//        synchronized(_actionsLockObject) {
-        actionFinished(action)
-//        }
+        synchronized(_actionsLockObject) {
+            actionFinished(action)
+        }
     }
 
-    //    @Throws(PluginException::class)
     protected open fun beforeActionRun(action: BaseAction<TDelegate>) {}
     protected open fun actionFinished(action: BaseAction<TDelegate>) {}
 
