@@ -19,7 +19,9 @@ protected constructor() : Callback<TDelegate, BaseAction<TDelegate>>, CoroutineS
 
     abstract fun createAction(action: TActionKey, call: CallContext): BaseAction<TDelegate>
 
-    open fun load(): Deferred<Unit> = async {}
+    open fun load() {}
+
+    open fun unload() {}
 
     private val job = Job()
     override val coroutineContext: CoroutineContext
@@ -30,8 +32,11 @@ protected constructor() : Callback<TDelegate, BaseAction<TDelegate>>, CoroutineS
         try {
             val baseAction = createAction(action, call)
             setCurrentActionAndRunSafely(baseAction, call)
-        } catch (e: PluginException) {
-            call.result(delegate.errorMapper.map(e))
+        } catch (error: Throwable) {
+            call.result(
+                CallContextResult.error(errorMapper.map(error)),
+                true
+            )
         }
         return true
     }
@@ -57,4 +62,8 @@ protected constructor() : Callback<TDelegate, BaseAction<TDelegate>>, CoroutineS
     private fun setupAction(action: BaseAction<TDelegate>, call: CallContext) {
         action.initialize(call, this, delegate)
     }
+
+    private val defaultErrorMapper: IErrorMapper = DefaultErrorMapper()
+    private var _errorMapper: IErrorMapper? = null
+    override val errorMapper: IErrorMapper get() = _errorMapper ?: defaultErrorMapper
 }

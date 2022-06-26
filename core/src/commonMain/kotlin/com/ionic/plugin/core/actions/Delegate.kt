@@ -1,5 +1,3 @@
 package com.ionic.plugin.core.actions
 
-expect interface Delegate {
-    val errorMapper: IErrorMapper
-}
+expect interface Delegate

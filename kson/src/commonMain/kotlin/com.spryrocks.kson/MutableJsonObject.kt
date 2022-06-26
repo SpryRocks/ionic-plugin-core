@@ -4,22 +4,19 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.encodeToJsonElement
 
-class MutableJsonObject private constructor(override val map: MutableMap<String, JsonElement>): JsonObject(map) {
-    constructor(): this(mutableMapOf())
+class MutableJsonObject internal constructor(override val map: MutableMap<String, JsonElement>) : JsonObject(map) {
+    constructor() : this(mutableMapOf())
 
-    fun put(key: String, value: Boolean) {
-        putValueInternal(key, value)
-    }
+    fun put(key: String, value: String) = putValueInternal(key, value)
 
-    fun put(key: String, value: JsonObject) {
-        putValueInternal(key, value.map)
-    }
+    fun put(key: String, value: Int) = putValueInternal(key, value)
 
-    private inline fun <reified T> putValueInternal(key: String, value: T) {
+    fun put(key: String, value: Boolean) = putValueInternal(key, value)
+
+    fun put(key: String, value: JsonObject) = putValueInternal(key, value.map)
+
+    private inline fun <reified T> putValueInternal(key: String, value: T) =
         putInternal(key, Json.encodeToJsonElement(value))
-    }
 
-    private fun putInternal(key: String, value: JsonElement) {
-        map[key] = value
-    }
+    private fun putInternal(key: String, value: JsonElement) = this.apply { map[key] = value }
 }

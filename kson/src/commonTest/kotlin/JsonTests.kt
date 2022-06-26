@@ -1,5 +1,8 @@
 import com.spryrocks.kson.JsonObject
 import com.spryrocks.kson.MutableJsonObject
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.encodeToJsonElement
 import kotlin.test.Test
 
 class JsonTests {
@@ -28,4 +31,17 @@ class JsonTests {
 
         print(jsonObject1)
     }
+
+    @Test
+    fun testClassToJsonEncoding() {
+        val data = JsonObject.fromObject(MyData(false))
+        print(data)
+
+        val intData = Json.encodeToJsonElement(111)
+        print(intData)
+    }
+}
+
+@Serializable
+class MyData(val test: Boolean) {
 }
