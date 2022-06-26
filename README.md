@@ -13,9 +13,9 @@ repositories {
  
 dependencies {
     ...
-    implementation 'com.github.SpryRocks.ionic-plugin-core:core:62b7698576'
-    implementation 'com.github.SpryRocks.ionic-plugin-core:android:62b7698576'
-    implementation 'com.github.SpryRocks.ionic-plugin-core:kson:62b7698576'
+    implementation 'com.github.SpryRocks.ionic-plugin-core:core:0.0.1-alpha.1'
+    implementation 'com.github.SpryRocks.ionic-plugin-core:android:0.0.1-alpha.1'
+    implementation 'com.github.SpryRocks.ionic-plugin-core:kson:0.0.1-alpha.1'
 }
 ```
 

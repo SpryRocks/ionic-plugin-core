@@ -32,13 +32,14 @@ kotlin {
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.2")
                 implementation(project(":kson"))
+                implementation("org.jetbrains.kotlinx:atomicfu:0.18.0")
             }
         }
         if (enableJS == "true") {
             val jsMain by getting {
                 dependsOn(commonMain)
                 dependencies {
-                    implementation("org.jetbrains.kotlin:atomicfu:1.6.21") // not working without this line
+//                    implementation("org.jetbrains.kotlin:atomicfu:1.6.21") // not working without this line
                 }
             }
         }
