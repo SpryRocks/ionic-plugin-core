@@ -16,7 +16,7 @@ android {
     namespace = "com.ionic.plugin.android.core"
     compileSdk = 31
     defaultConfig {
-        minSdk = 22
+        minSdk = 21
         targetSdk = 31
     }
     buildTypes {
