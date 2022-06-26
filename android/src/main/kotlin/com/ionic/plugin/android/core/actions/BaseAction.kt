@@ -12,4 +12,16 @@ abstract class BaseAction<TDelegate : Delegate, TWrapperDelegate : WrapperDelega
             }
             throw java.lang.Error("Call should have CallContext type")
         }
+
+//    override fun executeAsync(block: () -> Unit) {
+//        delegate.threadPool.execute {
+//            block()
+//        }
+//    }
+
+    override fun executeSync(block: () -> Unit) {
+        delegate.activity.runOnUiThread {
+            block()
+        }
+    }
 }

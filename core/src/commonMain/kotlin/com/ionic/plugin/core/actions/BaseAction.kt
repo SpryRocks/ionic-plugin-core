@@ -2,14 +2,14 @@ package com.ionic.plugin.core.actions
 
 import com.ionic.plugin.core.PluginException
 import com.spryrocks.kson.JsonObject
+import kotlinx.atomicfu.atomic
+import kotlinx.atomicfu.locks.SynchronizedObject
+import kotlinx.atomicfu.locks.synchronized
 import kotlinx.serialization.json.JsonArray
 import kotlin.js.JsExport
 
 @JsExport
-abstract class BaseAction<TDelegate : Delegate>
-    : Action {
-    private val _args: JsonArray? = null
-
+abstract class BaseAction<TDelegate : Delegate> : Action {
     private var _callback: Callback<TDelegate, BaseAction<TDelegate>>? = null
 
     private var _call: CallContext? = null
@@ -20,31 +20,45 @@ abstract class BaseAction<TDelegate : Delegate>
     val delegate: TDelegate
         get() = _delegate!!
 
-    internal fun initialize(call: CallContext, callback: Callback<TDelegate, BaseAction<TDelegate>>, delegate: TDelegate) {
+    internal fun initialize(
+        call: CallContext,
+        callback: Callback<TDelegate, BaseAction<TDelegate>>,
+        delegate: TDelegate
+    ) {
         _call = call
         _callback = callback
         _delegate = delegate
     }
 
-    private val _lock = Any()
+    private val _lock = SynchronizedObject()
 
-    //@Volatile
-    private var state = State.NONE
+    private var state = atomic(State.NONE)
 
     fun run() {
-        //synchronized(_lock) {
-        if (state != State.NONE) {
-            return
+        synchronized(_lock) {
+            if (state.value != State.NONE) {
+                return
+            }
+            state.value = State.RUNNING
         }
-        state = State.RUNNING
 
         try {
-            onExecute()
+            executeAsync { onExecute() }
         } catch (e: PluginException) {
             error(e)
         } catch (e: Exception) {
             error(PluginException(e.message, e))
         }
+    }
+
+    protected open fun executeAsync(block: () -> Unit) {
+        print("Used default implementation for executeAsync() method without effects")
+        block()
+    }
+
+    protected open fun executeSync(block: () -> Unit) {
+        print("Used default implementation for executeSync() method without effects")
+        block()
     }
 
     @Throws(PluginException::class)
@@ -79,39 +93,28 @@ abstract class BaseAction<TDelegate : Delegate>
     }
 
     protected fun result(result: CallContextResult, finish: Boolean) {
-//        synchronized(_lock) {
-        if (!isRunning) return
-        if (!finish) {
+        synchronized(_lock) {
+            if (!isRunning) return
+            if (!finish) {
 //                pluginResult.setKeepCallback(true)
+            }
+            call.result(result)
+            if (finish) {
+                finish()
+            }
         }
-        call.result(result)
-        if (finish) {
-            finish()
-        }
-//        }
     }
 
     private fun finish() {
         cancelTimeout()
         _callback!!.finishActionSafely(this)
-        state = State.FINISHED
+        state.value = State.FINISHED
     }
 
     private val isRunning: Boolean
-        get() = state == State.RUNNING
+        get() = state.value == State.RUNNING
 
-//    @get:NonNull
-//    protected val context: Context
-//        protected get() = delegate!!.context
-
-//    protected fun executeAsync(action: ExecuteAction) {
-//        delegate!!.threadPool.execute(object : Runnable() {
-//            override fun run() {
-//                executeActionSafe(action)
-//            }
-//        })
-//    }
-
+//    private val timeoutTimer_lock = Any()
 //    @Nullable
 //    private var timeoutTimer: CountDownTimer? = null
 
@@ -145,9 +148,4 @@ abstract class BaseAction<TDelegate : Delegate>
     private enum class State {
         NONE, RUNNING, FINISHED
     }
-
-    companion object {
-        private val timeoutTimer_lock = Any()
-    }
 }
-

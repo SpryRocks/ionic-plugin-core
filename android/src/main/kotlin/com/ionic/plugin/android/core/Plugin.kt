@@ -15,7 +15,7 @@ abstract class Plugin<TActionKey, TDelegate : Delegate> :
     val context: Context
         get() = activity
 
-    protected fun init(wrapperDelegate: WrapperDelegate) {
+    protected fun initialize(wrapperDelegate: WrapperDelegate) {
         this._wrapperDelegate = wrapperDelegate
     }
 
