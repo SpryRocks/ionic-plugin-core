@@ -1,4 +1,3 @@
 package com.spryrocks.kson
 
-open class JsonElement {
-}
+abstract class JsonElement
