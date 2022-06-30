@@ -1,14 +1,16 @@
 package com.ionic.plugin.core.actions
 
+import com.spryrocks.kson.JsonArray
 import com.spryrocks.kson.JsonObject
 import kotlin.js.JsExport
 
 expect interface CallContext {
     fun getString(key: String): String?
     fun getInt(key: String): Int?
-    fun getObject(key: String): JsonObject?
+    fun getJsonObject(key: String): JsonObject?
     fun getBoolean(key: String): Boolean?
     fun getDouble(key: String): Double?
+    fun getJsonArray(key: String): JsonArray?
 
     fun result(result: CallContextResult, finish: Boolean)
 }
