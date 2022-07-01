@@ -1,6 +1,6 @@
 package com.spryrocks.kson
 
-import com.spryrocks.kson.utils.convertToJsonElement
+import com.spryrocks.kson.utils.convertFromKJsonElement
 import com.spryrocks.kson.utils.encodeToJsonObject
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
@@ -24,7 +24,7 @@ internal constructor(internal open val map: Map<String, kotlinx.serialization.js
 
     fun names() = map.keys
 
-    fun getJsonElement(name: String) = optJsonElement(name) ?: throw Exception("value with name '${name}' not found")
+    fun get(name: String) = opt(name) ?: throw Exception("value with name '${name}' is null")
 
-    fun optJsonElement(name: String): JsonElement? = map[name]?.let { convertToJsonElement(it) }
+    fun opt(name: String): Any? = map[name]?.let { convertFromKJsonElement(it) }
 }
