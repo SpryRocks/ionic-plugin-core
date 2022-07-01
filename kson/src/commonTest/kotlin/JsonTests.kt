@@ -57,7 +57,7 @@ class JsonTests {
 //            print(item)
 
             for (name in item.names()) {
-                val value = item.getJsonElement(name)
+                val value = item.opt(name)
                 println("$name: $value")
             }
         }
@@ -65,5 +65,4 @@ class JsonTests {
 }
 
 @Serializable
-class MyData(val test: Boolean) {
-}
+class MyData(val test: Boolean)

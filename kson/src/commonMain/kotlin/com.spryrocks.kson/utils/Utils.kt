@@ -2,30 +2,30 @@ package com.spryrocks.kson.utils
 
 import com.spryrocks.kson.*
 
-internal fun convertToJsonElement(kElement: kotlinx.serialization.json.JsonElement): JsonElement {
-    when (kElement) {
+internal fun convertFromKJsonElement(kJsonElement: kotlinx.serialization.json.JsonElement): Any? {
+    when (kJsonElement) {
+        // null
+        is kotlinx.serialization.json.JsonNull -> return null
+        // primitive
         is kotlinx.serialization.json.JsonPrimitive -> {
-            // null
-            if (kElement is kotlinx.serialization.json.JsonNull) {
-                return JsonNull()
-            }
             // string
-            val content = kElement.content
-            if (kElement.isString) {
-                return JsonString(kElement.content)
-            }
+            val content = kJsonElement.content
+            if (kJsonElement.isString) return content
             // int
             val intValue = content.toIntOrNull()
-            if (intValue != null) return JsonInt(intValue)
+            if (intValue != null) return intValue
+            // float
+            val floatValue= content.toFloatOrNull()
+            if (floatValue != null) return floatValue
             // boolean
             val booleanValue = content.toBooleanStrictOrNull()
-            if (booleanValue != null) return JsonBoolean(booleanValue)
+            if (booleanValue != null) return booleanValue
         }
         // object
-        is kotlinx.serialization.json.JsonObject -> return JsonObject(kElement)
+        is kotlinx.serialization.json.JsonObject -> return JsonObject(kJsonElement)
         // array
-        is kotlinx.serialization.json.JsonArray -> return JsonArray(kElement)
+        is kotlinx.serialization.json.JsonArray -> return JsonArray(kJsonElement)
     }
 
-    throw Exception("Unknown type: " + kElement::class.simpleName)
+    throw Exception("Unknown type: " + kJsonElement::class.simpleName)
 }
