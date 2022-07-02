@@ -34,6 +34,9 @@ android {
             java.srcDir("src/main/kotlin")
         }
     }
+    dependencies {
+        implementation("androidx.appcompat:appcompat:1.4.2")
+    }
 }
 
 afterEvaluate {
