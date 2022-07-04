@@ -24,7 +24,26 @@ internal constructor(internal open val map: Map<String, kotlinx.serialization.js
 
     fun names() = map.keys
 
-    fun get(name: String) = opt(name) ?: throw Exception("value with name '${name}' is null")
+    fun get(name: String) = require(name, ::opt)
 
     fun opt(name: String): Any? = map[name]?.let { convertFromKJsonElement(it) }
+
+    fun getInt(name: String) = require(name, ::optInt)
+
+    fun optInt(name: String) = opt(name) as Int?
+
+    fun getString(name: String) = require(name, ::optString)
+
+    fun optString(name: String) = opt(name) as String?
+
+    fun getNumber(name: String) = require(name, ::optNumber)
+
+    fun optNumber(name: String) = opt(name) as Number?
+
+    fun getBoolean(name: String) = require(name, ::optBoolean)
+
+    fun optBoolean(name: String) = opt(name) as Boolean?
+
+    private fun <T> require(name: String, block: (name: String) -> T?) =
+        block(name) ?: throw Exception("value with name '${name}' is null")
 }
