@@ -50,13 +50,21 @@ abstract class BaseAction<TDelegate : Delegate> : Action {
     }
 
     protected open fun executeAsync(block: () -> Unit) {
-        print("Used default implementation for executeAsync() method without effects")
-        block()
+        try {
+            print("Used default implementation for executeAsync() method without effects")
+            block()
+        } catch (error: Throwable) {
+            error(error)
+        }
     }
 
     protected open fun executeSync(block: () -> Unit) {
-        print("Used default implementation for executeSync() method without effects")
-        block()
+        try {
+            print("Used default implementation for executeSync() method without effects")
+            block()
+        } catch (error: Throwable) {
+            error(error)
+        }
     }
 
     @Throws(PluginException::class)
