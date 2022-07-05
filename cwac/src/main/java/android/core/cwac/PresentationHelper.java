@@ -18,6 +18,7 @@ import android.content.Context;
 import android.hardware.display.DisplayManager;
 import android.os.Build;
 import android.view.Display;
+import androidx.annotation.NonNull;
 
 /**
  * A class to assist in managing a Presentation.
@@ -45,6 +46,9 @@ public class PresentationHelper implements DisplayManager.DisplayListener {
     private boolean isFirstRun = true;
     private boolean isEnabled = true;
 
+    @NonNull
+    private Display display;
+    
     /**
      * Basic constructor.
      *
@@ -52,8 +56,9 @@ public class PresentationHelper implements DisplayManager.DisplayListener {
      *                 the Presentation
      * @param listener the callback for show/hide events
      */
-    public PresentationHelper(Context ctxt, Listener listener) {
+    public PresentationHelper(Context ctxt, Listener listener, @NonNull Display display) {
         this.listener = listener;
+        this.display = display;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             mgr =
@@ -116,18 +121,18 @@ public class PresentationHelper implements DisplayManager.DisplayListener {
 
     private void handleRoute() {
         if (isEnabled()) {
-            Display[] displays =
-                mgr.getDisplays(DisplayManager.DISPLAY_CATEGORY_PRESENTATION);
+//            Display[] displays =
+//                mgr.getDisplays(DisplayManager.DISPLAY_CATEGORY_PRESENTATION);
 
-            if (displays.length == 0) {
-                if (current != null || isFirstRun) {
-                    listener.clearPreso(true);
-                    current = null;
-                }
-            } else {
-                Display display = displays[0];
+//            if (displays.length == 0) {
+//                if (current != null || isFirstRun) {
+//                    listener.clearPreso(true);
+//                    current = null;
+//                }
+//            } else {
+//                Display display = displays[0];
 
-                if (display != null && display.isValid()) {
+                if (display.isValid()) {
                     if (current == null) {
                         listener.showPreso(display);
                         current = display;
@@ -142,7 +147,7 @@ public class PresentationHelper implements DisplayManager.DisplayListener {
                     listener.clearPreso(true);
                     current = null;
                 }
-            }
+//            }
 
             isFirstRun = false;
         }
