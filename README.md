@@ -12,10 +12,12 @@ repositories {
 ```
  
 dependencies {
+    ionicPluginCore = '0.0.1-alpha.9'
     ...
-    implementation 'com.github.SpryRocks.ionic-plugin-core:core:0.0.1-alpha.9'
-    implementation 'com.github.SpryRocks.ionic-plugin-core:android:0.0.1-alpha.9'
-    implementation 'com.github.SpryRocks.ionic-plugin-core:kson:0.0.1-alpha.9'
+    implementation 'com.github.SpryRocks.ionic-plugin-core:core:$ionicPluginCore'
+    implementation 'com.github.SpryRocks.ionic-plugin-core:android:$ionicPluginCore'
+    implementation 'com.github.SpryRocks.ionic-plugin-core:kson:$ionicPluginCore'
+    implementation 'com.github.SpryRocks.ionic-plugin-core:cwac:$ionicPluginCore'
 }
 ```
 

@@ -15,8 +15,10 @@ class MutableJsonObject internal constructor(override val map: MutableMap<String
 
     fun put(key: String, value: JsonObject) = putValueInternal(key, value.map)
 
+    fun put(key: String, value: JsonArray) = putValueInternal(key, value.list)
+
     private inline fun <reified T> putValueInternal(key: String, value: T) =
         putInternal(key, Json.encodeToJsonElement(value))
 
-    private fun putInternal(key: String, value: JsonElement) = this.apply { map[key] = value }
+    private fun putInternal(key: String, value: JsonElement) = apply { map[key] = value }
 }
