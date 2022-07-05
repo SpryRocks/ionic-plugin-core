@@ -21,7 +21,11 @@ abstract class BaseAction<TDelegate : Delegate, TWrapperDelegate : WrapperDelega
 
     override fun executeSync(block: () -> Unit) {
         delegate.activity.runOnUiThread {
-            block()
+            try {
+                block()
+            } catch (error: Throwable) {
+                error(error)
+            }
         }
     }
 }
