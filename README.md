@@ -12,7 +12,7 @@ repositories {
 ```
  
 dependencies {
-    ionicPluginCore = '0.0.1-alpha.9'
+    ionicPluginCore = '0.0.1-alpha.10'
     ...
     implementation 'com.github.SpryRocks.ionic-plugin-core:core:$ionicPluginCore'
     implementation 'com.github.SpryRocks.ionic-plugin-core:android:$ionicPluginCore'
@@ -24,3 +24,7 @@ dependencies {
 # Jitpack
 
 [https://jitpack.io/#SpryRocks/ionic-plugin-core](https://jitpack.io/#SpryRocks/ionic-plugin-core)
+
+# Repository
+
+[https://github.com/SpryRocks/ionic-plugin-core](https://github.com/SpryRocks/ionic-plugin-core)
