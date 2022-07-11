@@ -5,12 +5,19 @@ import com.spryrocks.kson.JsonObject
 import kotlin.js.JsExport
 
 expect interface CallContext {
-    fun getString(key: String): String?
-    fun getInt(key: String): Int?
-    fun getJsonObject(key: String): JsonObject?
-    fun getBoolean(key: String): Boolean?
-    fun getDouble(key: String): Double?
-    fun getJsonArray(key: String): JsonArray?
+    fun getString(key: String): String
+    fun getInt(key: String): Int
+    fun getJsonObject(key: String): JsonObject
+    fun getBoolean(key: String): Boolean
+    fun getDouble(key: String): Double
+    fun getJsonArray(key: String): JsonArray
+
+    fun optString(key: String): String?
+    fun optInt(key: String): Int?
+    fun optJsonObject(key: String): JsonObject?
+    fun optBoolean(key: String): Boolean?
+    fun optDouble(key: String): Double?
+    fun optJsonArray(key: String): JsonArray?
 
     fun result(result: CallContextResult, finish: Boolean)
 }
