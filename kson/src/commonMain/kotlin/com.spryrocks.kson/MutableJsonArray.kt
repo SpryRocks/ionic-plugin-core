@@ -4,7 +4,7 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.encodeToJsonElement
 
-class MutableJsonArray internal constructor(override val list: MutableList<JsonElement>) : JsonArray(list) {
+class MutableJsonArray internal constructor(override val list: MutableList<JsonElement?>) : JsonArray(list) {
     constructor() : this(mutableListOf())
 
     fun put(value: Int) = putValueInternal(value)
