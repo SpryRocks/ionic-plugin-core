@@ -3,9 +3,9 @@ package com.ionic.plugin.android.core
 import android.app.Activity
 import android.content.Context
 import com.ionic.plugin.android.core.actions.WrapperDelegate
-import com.ionic.plugin.android.core.actions.Delegate
+import com.ionic.plugin.core.actions.Delegate as CoreDelegate
 
-abstract class Plugin<TActionKey, TDelegate : Delegate> :
+abstract class Plugin<TActionKey, TDelegate : CoreDelegate> :
     com.ionic.plugin.core.Plugin<TActionKey, TDelegate>() {
     private var _wrapperDelegate: WrapperDelegate? = null
     private val wrapperDelegate: WrapperDelegate
