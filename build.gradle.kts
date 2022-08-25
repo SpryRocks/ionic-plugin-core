@@ -18,3 +18,7 @@ allprojects {
         mavenCentral()
     }
 }
+
+extra.apply {
+    set("mavenVersion", "0.0.1-alpha.14")
+}

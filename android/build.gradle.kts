@@ -6,6 +6,7 @@ plugins {
 }
 
 group = "com.github.SpryRocks"
+version = rootProject.ext.get("mavenVersion") as String
 
 dependencies {
     implementation(project(":core"))
@@ -44,6 +45,19 @@ afterEvaluate {
         publications {
             create<MavenPublication>("release") {
                 from(components["release"])
+            }
+        }
+    }
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHub"
+            url = uri("https://maven.pkg.github.com/SpryRocks/ionic-plugin-core")
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
             }
         }
     }
