@@ -3,7 +3,8 @@ plugins {
     id("maven-publish")
 }
 
-group = "com.github.SpryRocks"
+group = rootProject.ext.get("mavenGroup") as String
+version = rootProject.ext.get("mavenVersion") as String
 
 val enableIos: String by project
 val enableJS: String by project
@@ -58,6 +59,19 @@ kotlin {
             }
             val iosArm64Main by getting {
                 dependsOn(nativeMain)
+            }
+        }
+    }
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHub"
+            url = uri("https://maven.pkg.github.com/SpryRocks/ionic-plugin-core")
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
             }
         }
     }
