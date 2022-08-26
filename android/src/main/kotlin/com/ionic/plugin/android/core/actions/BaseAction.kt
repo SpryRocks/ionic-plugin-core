@@ -1,6 +1,7 @@
 package com.ionic.plugin.android.core.actions
 
 import android.app.Activity
+import com.ionic.plugin.android.core.WrapperDelegate
 
 abstract class BaseAction<TDelegate : Delegate, TWrapperDelegate : WrapperDelegate> :
     com.ionic.plugin.core.actions.BaseAction<TDelegate>() {
