@@ -11,10 +11,14 @@ val enableJS: String by project
 
 kotlin {
     if (enableIos == "true") {
-        iosSimulatorArm64 {
-        }
+//        iosSimulatorArm64 {
+//        }
+//
+//        iosArm64 {
+//        }
 
-        iosArm64 {
+        ios{
+
         }
     }
 
@@ -54,12 +58,15 @@ kotlin {
             jvmMain.dependsOn(this)
         }
         if (enableIos == "true") {
-            val iosSimulatorArm64Main by getting {
+            val iosMain by getting {
                 dependsOn(nativeMain)
             }
-            val iosArm64Main by getting {
-                dependsOn(nativeMain)
-            }
+//            val iosSimulatorArm64Main by getting {
+//                dependsOn(nativeMain)
+//            }
+//            val iosArm64Main by getting {
+//                dependsOn(nativeMain)
+//            }
         }
     }
 }
