@@ -4,9 +4,7 @@ import com.ionic.plugin.core.actions.*
 import kotlinx.atomicfu.locks.SynchronizedObject
 import kotlinx.atomicfu.locks.synchronized
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.async
 import kotlin.coroutines.CoroutineContext
 import kotlin.js.JsExport
 
@@ -26,6 +24,14 @@ protected constructor() : Callback<TDelegate, BaseAction<TDelegate>>, CoroutineS
     private val job = Job()
     override val coroutineContext: CoroutineContext
         get() = job
+
+    private var _wrapperDelegate: WrapperDelegate? = null
+    protected open val wrapperDelegate: WrapperDelegate
+        get() = _wrapperDelegate!!
+
+    fun _initializePluginInternal(wrapperDelegate: WrapperDelegate) {
+        this._wrapperDelegate = wrapperDelegate
+    }
 
     fun call(action: TActionKey, call: CallContext): Boolean {
         print("plugin action: $action")
