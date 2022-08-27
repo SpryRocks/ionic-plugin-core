@@ -46,4 +46,6 @@ internal constructor(internal open val map: Map<String, kotlinx.serialization.js
 
     private fun <T> require(name: String, block: (name: String) -> T?) =
         block(name) ?: throw Exception("value with name '${name}' is null")
+
+    val keys: Set<String> get() = map.keys
 }
