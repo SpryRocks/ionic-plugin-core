@@ -4,34 +4,41 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.encodeToJsonElement
 
-class MutableJsonObject internal constructor(override val map: MutableMap<String, JsonElement>) : JsonObject(map) {
+class MutableJsonObject
+internal constructor(
+    override val map: MutableMap<String, JsonElement>,
+) : JsonObject(map), IMutableJsonObject {
     constructor() : this(mutableMapOf())
 
-    fun put(key: String, value: String) = putValueInternal(key, value)
+    //region put
+    override fun put(name: String, value: String) = putValueInternal(name, value)
 
-    fun put(key: String, value: Number)  {
-        when(value) {
-            is Int -> put(key, value)
-            is Float -> put(key, value)
-            is Long -> put(key, value)
+    override fun put(name: String, value: Number) {
+        when (value) {
+            is Int -> put(name, value)
+            is Float -> put(name, value)
+            is Long -> put(name, value)
             else -> throw NotImplementedError("unknown type")
         }
     }
 
-    fun put(key: String, value: Int) = putValueInternal(key, value)
+    override fun put(name: String, value: Int) = putValueInternal(name, value)
 
-    fun put(key: String, value: Float) = putValueInternal(key, value)
+    override fun put(name: String, value: Float) = putValueInternal(name, value)
 
-    fun put(key: String, value: Long) = putValueInternal(key, value)
+    override fun put(name: String, value: Long) = putValueInternal(name, value)
 
-    fun put(key: String, value: Boolean) = putValueInternal(key, value)
+    override fun put(name: String, value: Boolean) = putValueInternal(name, value)
 
-    fun put(key: String, value: JsonObject) = putValueInternal(key, value.map)
+    override fun put(name: String, value: JsonObject) = putValueInternal(name, value.map)
 
-    fun put(key: String, value: JsonArray) = putValueInternal(key, value.list)
+    override fun put(name: String, value: JsonArray) = putValueInternal(name, value.list)
+    //endregion
 
-    private inline fun <reified T> putValueInternal(key: String, value: T) =
-        putInternal(key, Json.encodeToJsonElement(value))
+    //region utils
+    private inline fun <reified T> putValueInternal(name: String, value: T) =
+        putInternal(name, Json.encodeToJsonElement(value))
 
-    private fun putInternal(key: String, value: JsonElement) = apply { map[key] = value }
+    private fun putInternal(name: String, value: JsonElement): Unit = let { map[name] = value }
+    //endregion
 }

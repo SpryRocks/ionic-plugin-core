@@ -1,3 +1,3 @@
 package com.spryrocks.kson
 
-abstract class JsonElement
+abstract class JsonElement: IJsonElement
