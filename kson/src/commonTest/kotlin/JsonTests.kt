@@ -52,7 +52,7 @@ class JsonTests {
         val receipt = data.getJsonArray("receipt")
 //        print(receipt)
 
-        for (i in 0 until receipt.length()) {
+        for (i in 0 until receipt.length) {
             val item = receipt.getJsonObject(i)
 //            print(item)
 

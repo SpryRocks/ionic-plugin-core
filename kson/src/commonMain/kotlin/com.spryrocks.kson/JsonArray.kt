@@ -1,5 +1,6 @@
 package com.spryrocks.kson
 
+import com.spryrocks.kson.utils.convertFromKJsonElement
 import com.spryrocks.kson.utils.encodeToJsonArray
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
@@ -19,11 +20,15 @@ internal constructor(internal open val list: List<kotlinx.serialization.json.Jso
 
     fun mutate() = MutableJsonArray(list.toMutableList())
 
-    fun length() = list.size
+    val length get() = list.size
 
     fun getJsonObject(index: Int) = require(index, ::optJsonObject)
 
-    fun optJsonObject(index: Int) = list[index]?.let { JsonObject(it as kotlinx.serialization.json.JsonObject) }
+    fun optJsonObject(index: Int) = opt(index) as JsonObject?
+
+    fun get(index: Int) = require(index, ::opt)
+
+    fun opt(index: Int): Any? = list[index]?.let { convertFromKJsonElement(it) }
 
     private fun <T> require(index: Int, block: (index: Int) -> T?) =
         block(index) ?: throw Exception("value with index '${index}' is null")
