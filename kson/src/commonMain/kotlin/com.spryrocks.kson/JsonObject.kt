@@ -7,7 +7,9 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 open class JsonObject
-internal constructor(internal open val map: Map<String, kotlinx.serialization.json.JsonElement>) : JsonElement() {
+internal constructor(
+    internal open val map: Map<String, kotlinx.serialization.json.JsonElement>,
+) : JsonElement(), IJsonObject {
     companion object {
         fun fromJson(json: String) = fromMap(Json.decodeFromString(json))
 
@@ -16,36 +18,54 @@ internal constructor(internal open val map: Map<String, kotlinx.serialization.js
         inline fun <reified T> fromObject(data: T) = fromMap(encodeToJsonObject(data))
     }
 
+    //region opt
+    override fun opt(name: String) = map[name]?.let { convertFromKJsonElement(it) }
+
+    override fun optString(name: String) = opt(name) as String?
+
+    override fun optNumber(name: String) = opt(name) as Number?
+
+    override fun optInt(name: String) = opt(name) as Int?
+
+    override fun optFloat(name: String) = opt(name) as Float?
+
+    override fun optLong(name: String) = opt(name) as Long?
+
+    override fun optBoolean(name: String) = opt(name) as Boolean?
+
+    override fun optJsonObject(name: String) = opt(name) as JsonObject?
+
+    override fun optJsonArray(name: String) = opt(name) as JsonArray?
+    //endregion
+
+    //region get
+    override fun get(name: String) = require(name, ::opt)
+
+    override fun getString(name: String) = require(name, ::optString)
+
+    override fun getNumber(name: String) = require(name, ::optNumber)
+
+    override fun getInt(name: String) = require(name, ::optInt)
+
+    override fun getFloat(name: String) = require(name, ::optFloat)
+
+    override fun getLong(name: String) = require(name, ::optLong)
+
+    override fun getBoolean(name: String) = require(name, ::optBoolean)
+
+    override fun getJsonObject(name: String) = require(name, ::optJsonObject)
+
+    override fun getJsonArray(name: String) = require(name, ::optJsonArray)
+    //endregion
+
+    override val names: Set<String> get() = map.keys
+
+    override fun mutate() = MutableJsonObject(map.toMutableMap())
+
     override fun toString() = Json.encodeToString(map)
 
-    fun mutate() = MutableJsonObject(map.toMutableMap())
-
-    fun getJsonArray(name: String) = JsonArray(map[name] as kotlinx.serialization.json.JsonArray)
-
-    fun names() = map.keys
-
-    fun get(name: String) = require(name, ::opt)
-
-    fun opt(name: String): Any? = map[name]?.let { convertFromKJsonElement(it) }
-
-    fun getInt(name: String) = require(name, ::optInt)
-
-    fun optInt(name: String) = opt(name) as Int?
-
-    fun getString(name: String) = require(name, ::optString)
-
-    fun optString(name: String) = opt(name) as String?
-
-    fun getNumber(name: String) = require(name, ::optNumber)
-
-    fun optNumber(name: String) = opt(name) as Number?
-
-    fun getBoolean(name: String) = require(name, ::optBoolean)
-
-    fun optBoolean(name: String) = opt(name) as Boolean?
-
+    //region helpers
     private fun <T> require(name: String, block: (name: String) -> T?) =
         block(name) ?: throw Exception("value with name '${name}' is null")
-
-    val keys: Set<String> get() = map.keys
+    //endregion
 }
