@@ -2,7 +2,7 @@ package com.spryrocks.kson
 
 interface IJsonElement
 
-interface IJsonObject : IJsonElement {
+interface IJsonObjectProperties {
     fun opt(name: String): Any?
     fun optString(name: String): String?
     fun optNumber(name: String): Number?
@@ -22,7 +22,9 @@ interface IJsonObject : IJsonElement {
     fun getBoolean(name: String): Boolean
     fun getJsonObject(name: String): JsonObject
     fun getJsonArray(name: String): JsonArray
+}
 
+interface IJsonObject : IJsonElement, IJsonObjectProperties {
     val names: Set<String>
 
     fun mutate(): MutableJsonObject
