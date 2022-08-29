@@ -4,7 +4,7 @@ import com.spryrocks.kson.IJsonObjectProperties
 import com.spryrocks.kson.JsonObject
 import kotlin.js.JsExport
 
-expect interface CallContext: IJsonObjectProperties {
+interface CallContext: IJsonObjectProperties {
     fun result(result: CallContextResult, finish: Boolean)
 }
 
