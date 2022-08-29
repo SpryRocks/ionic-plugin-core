@@ -1,6 +1,6 @@
 package com.ionic.plugin.core.actions
 
-expect interface Action
+interface Action
 
 interface CancelableAction : Action {
     fun cancel()
