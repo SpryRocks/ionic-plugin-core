@@ -1,7 +1,10 @@
 package com.spryrocks.kson
 
+import kotlin.js.JsExport
+
 interface IJsonElement
 
+@JsExport
 interface IJsonObjectProperties {
     fun opt(name: String): Any?
     fun optString(name: String): String?
