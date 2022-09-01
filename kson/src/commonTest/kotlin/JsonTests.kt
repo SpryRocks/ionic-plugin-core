@@ -1,9 +1,12 @@
+import com.spryrocks.kson.JsonArray
 import com.spryrocks.kson.JsonObject
+import com.spryrocks.kson.MutableJsonArray
 import com.spryrocks.kson.MutableJsonObject
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.encodeToJsonElement
 import kotlin.test.Test
+import kotlin.test.expect
 
 class JsonTests {
     @Test
@@ -43,8 +46,7 @@ class JsonTests {
 
     @Test
     fun decodeJsonObjectWithArray() {
-        val json =
-            "{\"receipt\":[{\"hahaha\": null},{\"ok\":true},{\"textAlign\":1},{\"font\":0},{\"text\":\"Company name\\nStore Store Name\"},{\"textAlign\":0},{\"text\":\"\\n\"},{\"textAlign\":1},{\"font\":0},{\"text\":\"\\n\\n\"},{\"textSize\":1,\"textSizeHeight\":1},{\"textAlign\":0},{\"font\":0},{\"text\":\"Invoice no.                15-15\\nInvoice ID              81779fbf\\nDate            27.10.2016 14:46\\nService                    Admin\\n\"},{\"font\":0},{\"text\":\"________________________________\\n\\nLorem Ipsum is simply      12.00\\ndummy text of the printing      \\nand typesetting industry.       \\nFirst product             123.00\\nCustom                      3.00\\n________________________________\\n\\n\"},{\"textSize\":2,\"textSizeHeight\":2},{\"textAlign\":2},{\"text\":\"Total CHF 138.00\\n\\n\"},{\"textSize\":1,\"textSizeHeight\":1},{\"font\":0},{\"textAlign\":0},{\"text\":\"Cash CHF                  200.00\\nChange CHF                 62.00\\n\\nVAT no. CHE- 123.456.789\\nRate       Net     VAT     Gross\\n8.00%   127.78   10.22    138.00\\n\\n\\n\"},{\"cut\":\"Nothing\"}]}"
+        val json = SimpleJsonObjectString
 
         val data = JsonObject.fromJson(json)
 //        print(data)
@@ -61,6 +63,36 @@ class JsonTests {
                 println("$name: $value")
             }
         }
+    }
+
+    @Test
+    fun testNullableValues() {
+        val json = JsonArrayWithNullableValuesString
+        val jsonArray = JsonArray.fromJson(json)
+        for(i in 0 until jsonArray.size) {
+            val jsonItem = jsonArray.get(i)
+            if(jsonItem is JsonObject) {
+                jsonItem.names.forEach { name ->
+                    val value = jsonItem.opt(name)
+                    value.toString()
+                }
+            }
+        }
+        jsonArray.toString()
+    }
+
+    @Test
+    fun testPutNullableToObject() {
+        val jsonObject = MutableJsonObject()
+        jsonObject.putNull("nullField")
+        if (jsonObject.opt("nullField") != null) throw Error()
+    }
+
+    @Test
+    fun testPutNullableToArray() {
+        val jsonArray = MutableJsonArray()
+        jsonArray.putNull()
+        if (jsonArray.opt(0) != null) throw Error()
     }
 }
 

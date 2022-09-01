@@ -33,6 +33,8 @@ internal constructor(
     override fun put(value: JsonObject, index: Int?) = putValueInternal(value.map, index)
 
     override fun put(value: JsonArray, index: Int?) = putValueInternal(value.list, index)
+
+    override fun putNull(index: Int?) = putValueInternal<String?>(null, index)
     //endregion
 
     //region helpers

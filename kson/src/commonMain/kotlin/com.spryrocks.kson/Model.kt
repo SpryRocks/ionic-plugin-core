@@ -69,6 +69,7 @@ interface IMutableJsonObject : IJsonObject {
     fun put(name: String, value: Boolean)
     fun put(name: String, value: JsonObject)
     fun put(name: String, value: JsonArray)
+    fun putNull(name: String)
 }
 
 interface IMutableJsonArray : IJsonArray {
@@ -80,4 +81,5 @@ interface IMutableJsonArray : IJsonArray {
     fun put(value: Boolean, index: Int? = null)
     fun put(value: JsonObject, index: Int? = null)
     fun put(value: JsonArray, index: Int? = null)
+    fun putNull(index: Int? = null)
 }
