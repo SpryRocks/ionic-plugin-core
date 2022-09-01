@@ -4,6 +4,7 @@ import com.spryrocks.kson.IJsonObjectProperties
 import com.spryrocks.kson.JsonObject
 import kotlin.js.JsExport
 
+@JsExport
 interface CallContext: IJsonObjectProperties {
     fun getDouble(key: String): Double
     fun optDouble(key: String): Double?
