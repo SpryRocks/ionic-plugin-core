@@ -12,7 +12,7 @@ repositories {
 ```
  
 dependencies {
-    ionicPluginCore = '0.0.1-alpha.13'
+    ionicPluginCore = '0.0.1-alpha.33'
     ...
     implementation 'com.github.SpryRocks.ionic-plugin-core:core:$ionicPluginCore'
     implementation 'com.github.SpryRocks.ionic-plugin-core:android:$ionicPluginCore'
