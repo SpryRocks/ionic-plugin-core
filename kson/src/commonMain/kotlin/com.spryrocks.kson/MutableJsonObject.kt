@@ -13,13 +13,11 @@ internal constructor(
     //region put
     override fun put(name: String, value: String) = putValueInternal(name, value)
 
-    override fun put(name: String, value: Number) {
-        when (value) {
-            is Int -> put(name, value)
-            is Float -> put(name, value)
-            is Long -> put(name, value)
-            else -> throw NotImplementedError("unknown type")
-        }
+    override fun put(name: String, value: Number) = when (value) {
+        is Int -> put(name, value)
+        is Float -> put(name, value)
+        is Long -> put(name, value)
+        else -> throw NotImplementedError("unknown type")
     }
 
     override fun put(name: String, value: Int) = putValueInternal(name, value)
@@ -35,6 +33,15 @@ internal constructor(
     override fun put(name: String, value: JsonArray) = putValueInternal(name, value.list)
 
     override fun putNull(name: String) = putValueInternal<String?>(name, null)
+
+    override fun put(name: String, value: JsonValue) = when (value) {
+        is String -> put(name, value)
+        is Number -> put(name, value)
+        is Boolean -> put(name, value)
+        is JsonObject -> put(name, value)
+        is JsonArray -> put(name, value)
+        else -> throw NotImplementedError("unknown type")
+    }
     //endregion
 
     //region utils

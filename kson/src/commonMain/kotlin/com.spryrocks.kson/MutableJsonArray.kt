@@ -35,6 +35,15 @@ internal constructor(
     override fun put(value: JsonArray, index: Int?) = putValueInternal(value.list, index)
 
     override fun putNull(index: Int?) = putValueInternal<String?>(null, index)
+
+    override fun put(value: JsonValue, index: Int?) = when (value) {
+        is String -> put(value, index)
+        is Number -> put(value, index)
+        is Boolean -> put(value, index)
+        is JsonObject -> put(value, index)
+        is JsonArray -> put(value, index)
+        else -> throw NotImplementedError("unknown type")
+    }
     //endregion
 
     //region helpers

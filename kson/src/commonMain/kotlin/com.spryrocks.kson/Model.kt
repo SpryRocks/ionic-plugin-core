@@ -2,11 +2,13 @@ package com.spryrocks.kson
 
 import kotlin.js.JsExport
 
+typealias JsonValue = Any
+
 interface IJsonElement
 
 @JsExport
 interface IJsonObjectProperties {
-    fun opt(name: String): Any?
+    fun opt(name: String): JsonValue?
     fun optString(name: String): String?
     fun optNumber(name: String): Number?
     fun optInt(name: String): Int?
@@ -16,7 +18,7 @@ interface IJsonObjectProperties {
     fun optJsonObject(name: String): JsonObject?
     fun optJsonArray(name: String): JsonArray?
 
-    fun get(name: String): Any
+    fun get(name: String): JsonValue
     fun getString(name: String): String
     fun getNumber(name: String): Number
     fun getInt(name: String): Int
@@ -36,7 +38,7 @@ interface IJsonObject : IJsonElement, IJsonObjectProperties {
 }
 
 interface IJsonArray : IJsonElement {
-    fun opt(index: Int): Any?
+    fun opt(index: Int): JsonValue?
     fun optString(index: Int): String?
     fun optNumber(index: Int): Number?
     fun optInt(index: Int): Int?
@@ -46,7 +48,7 @@ interface IJsonArray : IJsonElement {
     fun optJsonObject(index: Int): JsonObject?
     fun optJsonArray(index: Int): JsonArray?
 
-    fun get(index: Int): Any
+    fun get(index: Int): JsonValue
     fun getString(index: Int): String
     fun getNumber(index: Int): Number
     fun getInt(index: Int): Int
@@ -73,6 +75,7 @@ interface IMutableJsonObject : IJsonObject {
     fun put(name: String, value: JsonObject)
     fun put(name: String, value: JsonArray)
     fun putNull(name: String)
+    fun put(name: String, value: JsonValue)
 }
 
 interface IMutableJsonArray : IJsonArray {
@@ -85,4 +88,5 @@ interface IMutableJsonArray : IJsonArray {
     fun put(value: JsonObject, index: Int? = null)
     fun put(value: JsonArray, index: Int? = null)
     fun putNull(index: Int? = null)
+    fun put(value: JsonValue, index: Int? = null)
 }
