@@ -13,7 +13,7 @@ abstract class Plugin<TActionKey, TDelegate : Delegate>
 protected constructor() : Callback<TDelegate, BaseAction<TDelegate>>, CoroutineScope {
     private val _actionsLockObject = SynchronizedObject()
 
-    protected abstract val delegate: TDelegate;
+    protected abstract val delegate: TDelegate
 
     abstract fun createAction(action: TActionKey, call: CallContext): BaseAction<TDelegate>
 
