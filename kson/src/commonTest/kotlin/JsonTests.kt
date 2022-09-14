@@ -94,6 +94,15 @@ class JsonTests {
         jsonArray.putNull()
         if (jsonArray.opt(0) != null) throw Error()
     }
+
+    @Test
+    fun testArrayIterator() {
+        val jsonArray = MutableJsonArray()
+        jsonArray.put("aaa")
+        jsonArray.put(111)
+
+        jsonArray.forEach { it -> println(it) }
+    }
 }
 
 @Serializable
