@@ -1,5 +1,6 @@
 package com.spryrocks.kson
 
+import com.spryrocks.kson.utils.JsonArrayIterator
 import com.spryrocks.kson.utils.convertFromKJsonElement
 import com.spryrocks.kson.utils.encodeToJsonArray
 import kotlinx.serialization.decodeFromString
@@ -63,6 +64,8 @@ internal constructor(
     override fun mutate() = MutableJsonArray(list.toMutableList())
 
     override fun toString() = Json.encodeToString(list)
+
+    override fun iterator() = JsonArrayIterator(this)
 
     //region helpers
     private fun <T> require(index: Int, block: (index: Int) -> T?) =

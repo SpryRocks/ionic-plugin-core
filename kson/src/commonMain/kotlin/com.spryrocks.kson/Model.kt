@@ -37,7 +37,7 @@ interface IJsonObject : IJsonElement, IJsonObjectProperties {
     override fun toString(): String
 }
 
-interface IJsonArray : IJsonElement {
+interface IJsonArrayProperties {
     fun opt(index: Int): JsonValue?
     fun optString(index: Int): String?
     fun optNumber(index: Int): Number?
@@ -57,7 +57,9 @@ interface IJsonArray : IJsonElement {
     fun getBoolean(index: Int): Boolean
     fun getJsonObject(index: Int): JsonObject
     fun getJsonArray(index: Int): JsonArray
+}
 
+interface IJsonArray : IJsonElement, IJsonArrayProperties, Iterable<JsonValue> {
     val size: Int
 
     fun mutate(): IMutableJsonArray
