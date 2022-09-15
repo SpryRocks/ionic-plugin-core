@@ -103,6 +103,22 @@ class JsonTests {
 
         jsonArray.forEach { it -> println(it) }
     }
+
+    @Test
+    fun createBigJsonArray() {
+        val jsonArray = MutableJsonArray()
+        for(i in 0 until 1000000) {
+            jsonArray.put(i)
+        }
+    }
+
+    @Test
+    fun createBigJsonObject() {
+        val jsonObject = MutableJsonObject()
+        for(i in 0 until 1000000) {
+            jsonObject.put("value_$i", i)
+        }
+    }
 }
 
 @Serializable

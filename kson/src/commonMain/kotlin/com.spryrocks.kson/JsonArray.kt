@@ -9,7 +9,7 @@ import kotlinx.serialization.json.Json
 
 open class JsonArray
 internal constructor(
-    internal open val list: List<kotlinx.serialization.json.JsonElement?>,
+    internal open val list: List<kotlinx.serialization.json.JsonElement>,
 ): JsonElement(), IJsonArray {
     companion object {
         fun fromJson(json: String) = fromList(Json.decodeFromString(json))

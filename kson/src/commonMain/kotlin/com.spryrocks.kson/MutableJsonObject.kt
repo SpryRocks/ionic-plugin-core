@@ -1,8 +1,8 @@
 package com.spryrocks.kson
 
-import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
-import kotlinx.serialization.json.encodeToJsonElement
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.JsonNull
 
 class MutableJsonObject
 internal constructor(
@@ -11,7 +11,7 @@ internal constructor(
     constructor() : this(mutableMapOf())
 
     //region put
-    override fun put(name: String, value: String) = putValueInternal(name, value)
+    override fun put(name: String, value: String) = putInternal(name, JsonPrimitive(value))
 
     override fun put(name: String, value: Number) = when (value) {
         is Int -> put(name, value)
@@ -20,19 +20,19 @@ internal constructor(
         else -> throw NotImplementedError("unknown type")
     }
 
-    override fun put(name: String, value: Int) = putValueInternal(name, value)
+    override fun put(name: String, value: Int) = putInternal(name, JsonPrimitive(value))
 
-    override fun put(name: String, value: Float) = putValueInternal(name, value)
+    override fun put(name: String, value: Float) = putInternal(name, JsonPrimitive(value))
 
-    override fun put(name: String, value: Long) = putValueInternal(name, value)
+    override fun put(name: String, value: Long) = putInternal(name, JsonPrimitive(value))
 
-    override fun put(name: String, value: Boolean) = putValueInternal(name, value)
+    override fun put(name: String, value: Boolean) = putInternal(name, JsonPrimitive(value))
 
-    override fun put(name: String, value: JsonObject) = putValueInternal(name, value.map)
+    override fun put(name: String, value: JsonObject) = putInternal(name, kotlinx.serialization.json.JsonObject(value.map))
 
-    override fun put(name: String, value: JsonArray) = putValueInternal(name, value.list)
+    override fun put(name: String, value: JsonArray) = putInternal(name, kotlinx.serialization.json.JsonArray(value.list))
 
-    override fun putNull(name: String) = putValueInternal<String?>(name, null)
+    override fun putNull(name: String) = putInternal(name, JsonNull)
 
     override fun put(name: String, value: JsonValue) = when (value) {
         is String -> put(name, value)
@@ -45,9 +45,6 @@ internal constructor(
     //endregion
 
     //region utils
-    private inline fun <reified T> putValueInternal(name: String, value: T) =
-        putInternal(name, Json.encodeToJsonElement(value))
-
     private fun putInternal(name: String, value: JsonElement): Unit = let { map[name] = value }
     //endregion
 }
