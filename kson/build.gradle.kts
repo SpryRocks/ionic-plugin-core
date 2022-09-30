@@ -11,14 +11,7 @@ val enableJS: String by project
 
 kotlin {
     if (enableIos == "true") {
-//        iosSimulatorArm64 {
-//        }
-//
-//        iosArm64 {
-//        }
-
-        ios{
-
+        ios {
         }
     }
 
@@ -34,8 +27,8 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.2")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
             }
         }
         val commonTest by getting {
@@ -48,7 +41,7 @@ kotlin {
             val jsMain by getting {
                 dependsOn(commonMain)
                 dependencies {
-                    implementation("org.jetbrains.kotlin:atomicfu:1.6.21") // not working without this line
+//                    implementation("org.jetbrains.kotlin:atomicfu:1.6.21") // not working without this line
                 }
             }
         }
@@ -61,12 +54,6 @@ kotlin {
             val iosMain by getting {
                 dependsOn(nativeMain)
             }
-//            val iosSimulatorArm64Main by getting {
-//                dependsOn(nativeMain)
-//            }
-//            val iosArm64Main by getting {
-//                dependsOn(nativeMain)
-//            }
         }
     }
 }
