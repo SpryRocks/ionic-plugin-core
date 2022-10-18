@@ -70,17 +70,18 @@ abstract class BaseAction<TDelegate : Delegate> : Action {
     @Throws(PluginException::class)
     protected abstract fun onExecute()
 
-    fun success(data: JsonObject? = null, finish: Boolean = true) = result(CallContextResult.success(data), finish)
+    fun success(data: JsonObject? = null, finish: Boolean = true) = result(
+        CallContextResult.success(data),
+        finish,
+    )
 
-    fun error(error: Throwable? = null) {
-        result(
-            CallContextResult.error(
-                if (error != null) callback.errorMapper.map(error)
-                else null
-            ),
-            true
-        )
-    }
+    fun error(error: Throwable? = null, finish: Boolean = true) = result(
+        CallContextResult.error(
+            if (error != null) callback.errorMapper.map(error)
+            else null
+        ),
+        finish,
+    )
 
     private fun result(result: CallContextResult, finish: Boolean) {
         synchronized(_lock) {
