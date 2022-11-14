@@ -10,7 +10,7 @@ version = rootProject.ext.get("mavenVersion") as String
 
 dependencies {
     implementation(project(":core"))
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
 }
 
 android {
@@ -36,7 +36,7 @@ android {
         }
     }
     dependencies {
-        implementation("androidx.appcompat:appcompat:1.4.2")
+        implementation("androidx.appcompat:appcompat:1.5.1")
         implementation(project(":kson"))
     }
 }
