@@ -27,7 +27,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
             }
         }
@@ -40,9 +40,6 @@ kotlin {
         if (enableJS == "true") {
             val jsMain by getting {
                 dependsOn(commonMain)
-                dependencies {
-//                    implementation("org.jetbrains.kotlin:atomicfu:1.6.21") // not working without this line
-                }
             }
         }
         val jvmMain by getting
