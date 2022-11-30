@@ -7,7 +7,7 @@ abstract class BaseAction<TDelegate : Delegate, TWrapperDelegate : WrapperDelega
     com.ionic.plugin.core.actions.BaseAction<TDelegate>() {
     open val activity: Activity
         get() {
-            val call = this.call;
+            val call = this.call
             if (call is CallContext) {
                 return call.wrapperDelegate.activity
             }

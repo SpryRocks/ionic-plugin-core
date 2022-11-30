@@ -1,15 +1,35 @@
 package com.ionic.plugin.core.actions
 
-import com.spryrocks.kson.IJsonObjectProperties
-import com.spryrocks.kson.JsonObject
+import com.spryrocks.kson.*
 import kotlin.js.JsExport
+import com.spryrocks.kson.utils.require
 
 @JsExport
-interface CallContext: IJsonObjectProperties {
-    fun getDouble(key: String): Double
-    fun optDouble(key: String): Double?
+abstract class CallContext: IJsonObjectProperties {
+    abstract fun optDouble(name: String): Double?
 
-    fun result(result: CallContextResult, finish: Boolean)
+    abstract fun result(result: CallContextResult, finish: Boolean)
+
+    // require
+    fun getDouble(name: String) = require(name, ::optDouble)
+
+    override fun get(name: String) = require(name, ::opt)
+
+    override fun getString(name: String) = require(name, ::optString)
+
+    override fun getNumber(name: String) = require(name, ::optNumber)
+
+    override fun getInt(name: String) = require(name, ::optInt)
+
+    override fun getFloat(name: String) = require(name, ::optFloat)
+
+    override fun getLong(name: String) = require(name, ::optLong)
+
+    override fun getBoolean(name: String) = require(name, ::optBoolean)
+
+    override fun getJsonObject(name: String) = require(name, ::optJsonObject)
+
+    override fun getJsonArray(name: String) = require(name, ::optJsonArray)
 }
 
 @JsExport
