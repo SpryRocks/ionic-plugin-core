@@ -5,6 +5,7 @@ import com.spryrocks.kson.utils.encodeToJsonObject
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import com.spryrocks.kson.utils.require
 
 open class JsonObject
 internal constructor(
@@ -63,9 +64,4 @@ internal constructor(
     override fun mutate() = MutableJsonObject(map.toMutableMap())
 
     override fun toString() = Json.encodeToString(map)
-
-    //region helpers
-    private fun <T> require(name: String, block: (name: String) -> T?) =
-        block(name) ?: throw Exception("value with name '${name}' is null")
-    //endregion
 }
