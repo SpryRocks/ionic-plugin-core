@@ -5,40 +5,64 @@ import kotlin.js.JsExport
 import com.spryrocks.kson.utils.require
 
 @JsExport
-abstract class CallContext: IJsonObjectProperties {
-    abstract fun optDouble(name: String): Double?
+abstract class CallContext {
+    abstract fun asObject(): AsObject
 
-    abstract fun result(result: CallContextResult, finish: Boolean)
+    abstract fun asArray(): AsArray
 
-    // require
-    fun getDouble(name: String) = require(name, ::optDouble)
+    // result
+    abstract fun success(data: Any?, finish: Boolean)
 
-    override fun get(name: String) = require(name, ::opt)
+    abstract fun error(error: Throwable?, finish: Boolean)
 
-    override fun getString(name: String) = require(name, ::optString)
+    abstract class AsObject: IJsonObjectProperties {
+        abstract fun optDouble(name: String): Double?
 
-    override fun getNumber(name: String) = require(name, ::optNumber)
+        // require
+        fun getDouble(name: String) = require(name, ::optDouble)
 
-    override fun getInt(name: String) = require(name, ::optInt)
+        override fun get(name: String) = require(name, ::opt)
 
-    override fun getFloat(name: String) = require(name, ::optFloat)
+        override fun getString(name: String) = require(name, ::optString)
 
-    override fun getLong(name: String) = require(name, ::optLong)
+        override fun getNumber(name: String) = require(name, ::optNumber)
 
-    override fun getBoolean(name: String) = require(name, ::optBoolean)
+        override fun getInt(name: String) = require(name, ::optInt)
 
-    override fun getJsonObject(name: String) = require(name, ::optJsonObject)
+        override fun getFloat(name: String) = require(name, ::optFloat)
 
-    override fun getJsonArray(name: String) = require(name, ::optJsonArray)
-}
+        override fun getLong(name: String) = require(name, ::optLong)
 
-@JsExport
-abstract class CallContextResult protected constructor() {
-    companion object {
-        fun success(data: JsonObject? = null) = Success(data)
-        fun error(error: Throwable? = null) = Error(error)
+        override fun getBoolean(name: String) = require(name, ::optBoolean)
+
+        override fun getJsonObject(name: String) = require(name, ::optJsonObject)
+
+        override fun getJsonArray(name: String) = require(name, ::optJsonArray)
+
     }
 
-    class Success internal constructor(val data: JsonObject? = null) : CallContextResult()
-    class Error internal constructor(val error: Throwable? = null) : CallContextResult()
+    abstract class AsArray: IJsonArrayProperties {
+        abstract fun optDouble(index: Int): Double?
+
+        // require
+        fun getDouble(index: Int) = require(index, ::optDouble)
+
+        override fun get(index: Int) = require(index, ::opt)
+
+        override fun getString(index: Int) = require(index, ::optString)
+
+        override fun getNumber(index: Int) = require(index, ::optNumber)
+
+        override fun getInt(index: Int) = require(index, ::optInt)
+
+        override fun getFloat(index: Int) = require(index, ::optFloat)
+
+        override fun getLong(index: Int) = require(index, ::optLong)
+
+        override fun getBoolean(index: Int) = require(index, ::optBoolean)
+
+        override fun getJsonObject(index: Int) = require(index, ::optJsonObject)
+
+        override fun getJsonArray(index: Int) = require(index, ::optJsonArray)
+    }
 }

@@ -1,3 +1,5 @@
 package com.ionic.plugin.core.actions
 
-interface Delegate
+interface Delegate {
+    val mappers: Mappers
+}
