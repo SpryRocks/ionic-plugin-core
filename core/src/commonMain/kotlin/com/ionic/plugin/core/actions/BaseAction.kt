@@ -1,7 +1,6 @@
 package com.ionic.plugin.core.actions
 
 import com.ionic.plugin.core.PluginException
-import com.spryrocks.kson.JsonObject
 import kotlinx.atomicfu.atomic
 import kotlinx.atomicfu.locks.SynchronizedObject
 import kotlinx.atomicfu.locks.synchronized
@@ -9,7 +8,7 @@ import kotlin.js.JsExport
 
 @JsExport
 abstract class BaseAction<TDelegate : Delegate> : Action {
-    private var _callback: Callback<TDelegate, BaseAction<TDelegate>>? = null
+    private var _callback: PluginCallback<TDelegate, BaseAction<TDelegate>>? = null
     private val callback get() = _callback!!
 
     private var _call: CallContext? = null
@@ -22,8 +21,8 @@ abstract class BaseAction<TDelegate : Delegate> : Action {
 
     internal fun initialize(
         call: CallContext,
-        callback: Callback<TDelegate, BaseAction<TDelegate>>,
-        delegate: TDelegate
+        callback: PluginCallback<TDelegate, BaseAction<TDelegate>>,
+        delegate: TDelegate,
     ) {
         _call = call
         _callback = callback
@@ -70,23 +69,18 @@ abstract class BaseAction<TDelegate : Delegate> : Action {
     @Throws(PluginException::class)
     protected abstract fun onExecute()
 
-    fun success(data: JsonObject? = null, finish: Boolean = true) = result(
-        CallContextResult.success(data),
-        finish,
-    )
+    fun success(data: Any? = null, finish: Boolean = true) = resultSafely(finish) {
+        delegate.mappers.reportSuccess(data, call, finish)
+    }
 
-    fun error(error: Throwable? = null, finish: Boolean = true) = result(
-        CallContextResult.error(
-            if (error != null) callback.errorMapper.map(error)
-            else null
-        ),
-        finish,
-    )
+    fun error(error: Throwable? = null, finish: Boolean = true) = resultSafely(finish) {
+        delegate.mappers.reportError(error, call, finish)
+    }
 
-    private fun result(result: CallContextResult, finish: Boolean) {
+    private fun resultSafely(finish: Boolean, block: () -> Unit) {
         synchronized(_lock) {
             if (!isRunning) return
-            call.result(result, finish)
+            block()
             if (finish) finish()
         }
     }

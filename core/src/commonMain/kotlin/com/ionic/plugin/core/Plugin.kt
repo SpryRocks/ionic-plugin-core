@@ -10,10 +10,12 @@ import kotlin.js.JsExport
 
 @JsExport
 abstract class Plugin<TActionKey, TDelegate : Delegate>
-protected constructor() : Callback<TDelegate, BaseAction<TDelegate>>, CoroutineScope {
+protected constructor() : PluginCallback<TDelegate, BaseAction<TDelegate>>, CoroutineScope {
     private val _actionsLockObject = SynchronizedObject()
 
     protected abstract val delegate: TDelegate
+
+    abstract val mappers: Mappers
 
     abstract fun createAction(action: TActionKey, call: CallContext): BaseAction<TDelegate>
 
@@ -39,12 +41,17 @@ protected constructor() : Callback<TDelegate, BaseAction<TDelegate>>, CoroutineS
             val baseAction = createAction(action, call)
             setCurrentActionAndRunSafely(baseAction, call)
         } catch (error: Throwable) {
-            call.result(
-                CallContextResult.error(errorMapper.map(error)),
-                true
-            )
+            reportError(error, call, true)
         }
         return true
+    }
+
+    override fun reportSuccess(data: Any?, call: CallContext, finish: Boolean) {
+        mappers.reportSuccess(data, call, finish)
+    }
+
+    override fun reportError(error: Throwable?, call: CallContext, finish: Boolean) {
+        mappers.reportError(error, call, finish)
     }
 
     @Throws(PluginException::class)
@@ -68,8 +75,4 @@ protected constructor() : Callback<TDelegate, BaseAction<TDelegate>>, CoroutineS
     private fun setupAction(action: BaseAction<TDelegate>, call: CallContext) {
         action.initialize(call, this, delegate)
     }
-
-    private val defaultErrorMapper: IErrorMapper = DefaultErrorMapper()
-    private var _errorMapper: IErrorMapper? = null
-    override val errorMapper: IErrorMapper get() = _errorMapper ?: defaultErrorMapper
 }

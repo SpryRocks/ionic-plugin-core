@@ -11,7 +11,7 @@ abstract class BaseAction<TDelegate : Delegate, TWrapperDelegate : WrapperDelega
             if (call is CallContext) {
                 return call.wrapperDelegate.activity
             }
-            throw java.lang.Error("Call should have CallContext type")
+            throw java.lang.Error("Call should have android CallContext type")
         }
 
     override fun executeAsync(block: () -> Unit) {

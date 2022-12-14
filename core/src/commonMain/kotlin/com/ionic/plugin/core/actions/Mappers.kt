@@ -6,23 +6,26 @@ import com.spryrocks.kson.MutableJsonObject
 import kotlin.js.JsExport
 
 @JsExport
-open class Mappers
+abstract class Mappers {
+    open fun reportSuccess(data: Any?, callContext: CallContext, finish: Boolean) {
+        callContext.success(data, finish)
+    }
 
-@JsExport
-interface IErrorMapper {
-    fun map(error: Throwable): PluginException
+    fun reportError(error: Throwable?, callContext: CallContext, finish: Boolean) {
+        errorMapper.reportError(error, callContext, finish)
+    }
 
-    fun mapToJson(error: Throwable): JsonObject?
+    abstract val errorMapper: ErrorMapper
 }
 
 @JsExport
-class DefaultErrorMapper : IErrorMapper {
-    override fun map(error: Throwable): PluginException {
+open class ErrorMapper {
+    open fun map(error: Throwable): PluginException {
         if (error is PluginException) return error
         return PluginException(error.message, cause = error)
     }
 
-    override fun mapToJson(error: Throwable): JsonObject? {
+    open fun mapToJson(error: Throwable): JsonObject? {
         if (error !is PluginException) return null
 
         val code = error.code
@@ -30,5 +33,9 @@ class DefaultErrorMapper : IErrorMapper {
         val jsonObject = MutableJsonObject()
         code?.let { jsonObject.put("code", it) }
         return jsonObject
+    }
+
+    open fun reportError(error: Throwable?, callContext: CallContext, finish: Boolean) {
+        callContext.error(error, finish)
     }
 }

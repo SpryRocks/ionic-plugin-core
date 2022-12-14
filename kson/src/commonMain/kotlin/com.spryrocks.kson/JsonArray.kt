@@ -6,6 +6,7 @@ import com.spryrocks.kson.utils.encodeToJsonArray
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import com.spryrocks.kson.utils.require
 
 open class JsonArray
 internal constructor(
@@ -66,9 +67,4 @@ internal constructor(
     override fun toString() = Json.encodeToString(list)
 
     override fun iterator() = JsonArrayIterator(this)
-
-    //region helpers
-    private fun <T> require(index: Int, block: (index: Int) -> T?) =
-        block(index) ?: throw Exception("value with index '${index}' is null")
-    //endregion
 }
