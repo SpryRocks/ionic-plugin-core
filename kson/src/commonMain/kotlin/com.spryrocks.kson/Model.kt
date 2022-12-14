@@ -38,6 +38,8 @@ interface IJsonObject : IJsonElement, IJsonObjectProperties {
 }
 
 interface IJsonArrayProperties {
+    val size: Int
+
     fun opt(index: Int): JsonValue?
     fun optString(index: Int): String?
     fun optNumber(index: Int): Number?
@@ -60,8 +62,6 @@ interface IJsonArrayProperties {
 }
 
 interface IJsonArray : IJsonElement, IJsonArrayProperties, Iterable<JsonValue> {
-    val size: Int
-
     fun mutate(): IMutableJsonArray
 
     override fun toString(): String

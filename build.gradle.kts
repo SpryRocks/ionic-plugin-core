@@ -21,5 +21,5 @@ allprojects {
 
 extra.apply {
     set("mavenGroup", "com.github.SpryRocks.ionic-plugin-core")
-    set("mavenVersion", "0.0.4-test.3")
+    set("mavenVersion", "0.0.4-test.6")
 }
