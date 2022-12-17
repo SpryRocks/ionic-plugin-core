@@ -3,11 +3,12 @@ package com.ionic.plugin.core.actions
 import kotlin.reflect.KFunction1
 
 interface IActionConstructor<
-        TDelegate : Delegate,
-        TAction : BaseAction<TDelegate>,
+        TDelegate : Delegate<TMappers>,
+        TAction : BaseAction<TDelegate, TMappers>,
+        TMappers : Mappers,
         TArgs,
         >
-    : IActionCreator<TDelegate, TAction> {
+    : IActionCreator<TDelegate, TAction, TMappers> {
     val action: KFunction1<TArgs, TAction>
     fun mapper(call: CallContext): TArgs
 

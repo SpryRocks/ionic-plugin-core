@@ -2,9 +2,10 @@ package com.ionic.plugin.android.core.actions
 
 import android.app.Activity
 import com.ionic.plugin.android.core.WrapperDelegate
+import com.ionic.plugin.core.actions.Mappers
 
-abstract class BaseAction<TDelegate : Delegate, TWrapperDelegate : WrapperDelegate> :
-    com.ionic.plugin.core.actions.BaseAction<TDelegate>() {
+abstract class BaseAction<TDelegate : Delegate<TMappers>, TWrapperDelegate : WrapperDelegate, TMappers : Mappers> :
+    com.ionic.plugin.core.actions.BaseAction<TDelegate, TMappers>() {
     open val activity: Activity
         get() {
             val call = this.call

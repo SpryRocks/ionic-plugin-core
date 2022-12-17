@@ -9,15 +9,15 @@ import kotlin.coroutines.CoroutineContext
 import kotlin.js.JsExport
 
 @JsExport
-abstract class Plugin<TActionKey, TDelegate : Delegate>
-protected constructor() : PluginCallback<TDelegate, BaseAction<TDelegate>>, CoroutineScope {
+abstract class Plugin<TActionKey, TDelegate : Delegate<TMappers>, TMappers: Mappers>
+protected constructor() : PluginCallback<TDelegate, BaseAction<TDelegate, TMappers>, TMappers>, CoroutineScope {
     private val _actionsLockObject = SynchronizedObject()
 
     protected abstract val delegate: TDelegate
 
     abstract val mappers: Mappers
 
-    abstract fun createAction(action: TActionKey, call: CallContext): BaseAction<TDelegate>
+    abstract fun createAction(action: TActionKey, call: CallContext): BaseAction<TDelegate, TMappers>
 
     open fun load() {}
 
@@ -55,7 +55,7 @@ protected constructor() : PluginCallback<TDelegate, BaseAction<TDelegate>>, Coro
     }
 
     @Throws(PluginException::class)
-    private fun setCurrentActionAndRunSafely(action: BaseAction<TDelegate>, call: CallContext) {
+    private fun setCurrentActionAndRunSafely(action: BaseAction<TDelegate, TMappers>, call: CallContext) {
         setupAction(action, call)
         synchronized(_actionsLockObject) {
             beforeActionRun(action)
@@ -63,16 +63,16 @@ protected constructor() : PluginCallback<TDelegate, BaseAction<TDelegate>>, Coro
         action.run()
     }
 
-    override fun finishActionSafely(action: BaseAction<TDelegate>) {
+    override fun finishActionSafely(action: BaseAction<TDelegate, TMappers>) {
         synchronized(_actionsLockObject) {
             actionFinished(action)
         }
     }
 
-    protected open fun beforeActionRun(action: BaseAction<TDelegate>) {}
-    protected open fun actionFinished(action: BaseAction<TDelegate>) {}
+    protected open fun beforeActionRun(action: BaseAction<TDelegate, TMappers>) {}
+    protected open fun actionFinished(action: BaseAction<TDelegate, TMappers>) {}
 
-    private fun setupAction(action: BaseAction<TDelegate>, call: CallContext) {
+    private fun setupAction(action: BaseAction<TDelegate, TMappers>, call: CallContext) {
         action.initialize(call, this, delegate)
     }
 }
