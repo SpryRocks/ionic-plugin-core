@@ -7,8 +7,8 @@ import kotlinx.atomicfu.locks.synchronized
 import kotlin.js.JsExport
 
 @JsExport
-abstract class BaseAction<TDelegate : Delegate> : Action {
-    private var _callback: PluginCallback<TDelegate, BaseAction<TDelegate>>? = null
+abstract class BaseAction<TDelegate : Delegate<TMappers>, TMappers: Mappers> : Action {
+    private var _callback: PluginCallback<TDelegate, BaseAction<TDelegate, TMappers>, TMappers>? = null
     private val callback get() = _callback!!
 
     private var _call: CallContext? = null
@@ -21,7 +21,7 @@ abstract class BaseAction<TDelegate : Delegate> : Action {
 
     internal fun initialize(
         call: CallContext,
-        callback: PluginCallback<TDelegate, BaseAction<TDelegate>>,
+        callback: PluginCallback<TDelegate, BaseAction<TDelegate, TMappers>, TMappers>,
         delegate: TDelegate,
     ) {
         _call = call
@@ -93,6 +93,8 @@ abstract class BaseAction<TDelegate : Delegate> : Action {
 
     private val isRunning: Boolean
         get() = state.value == State.RUNNING
+
+    val mappers get() = delegate.mappers
 
 //    private val timeoutTimer_lock = Any()
 //    @Nullable
