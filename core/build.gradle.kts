@@ -30,7 +30,7 @@ kotlin {
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
                 implementation(project(":kson"))
-                implementation("org.jetbrains.kotlinx:atomicfu:0.18.0")
+                implementation("org.jetbrains.kotlinx:atomicfu:0.18.5")
             }
         }
         if (enableJS == "true") {
