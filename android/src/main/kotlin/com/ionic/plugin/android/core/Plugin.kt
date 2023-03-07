@@ -12,14 +12,4 @@ abstract class Plugin<TActionKey, TDelegate : CoreDelegate<TMappers>, TMappers :
 
     open val activity: Activity get() = wrapperDelegate.activity
     val context: Context get() = activity
-
-    //region Action Delegate
-//    fun startActivityForResult(@NonNull intent: Intent?, requestCode: Int) {
-//        cordova.startActivityForResult(this, intent, requestCode)
-//    }
-
-//    fun finishActivity(requestCode: Int) {
-//        cordova.getActivity().finishActivity(requestCode)
-//    }
-    //endregion
 }
