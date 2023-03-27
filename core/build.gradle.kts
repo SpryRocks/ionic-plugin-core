@@ -27,10 +27,14 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+                val kotlinxCoroutinesCoreVersion = project.findProperty("kotlinxCoroutinesCoreVersion") as String
+                val kotlinxSerializationJsonVersion = project.findProperty("kotlinxSerializationJsonVersion") as String
+                val kotlinxAtomicfuVersion = project.findProperty("kotlinxAtomicfuVersion") as String
+
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinxSerializationJsonVersion")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxCoroutinesCoreVersion")
                 implementation(project(":kson"))
-                implementation("org.jetbrains.kotlinx:atomicfu:0.18.5")
+                implementation("org.jetbrains.kotlinx:atomicfu:$kotlinxAtomicfuVersion")
             }
         }
         if (enableJS == "true") {

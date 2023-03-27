@@ -1,4 +1,3 @@
-
 plugins {
     kotlin("android")
     id("com.android.library")
@@ -9,8 +8,10 @@ group = rootProject.ext.get("mavenGroup") as String
 version = rootProject.ext.get("mavenVersion") as String
 
 dependencies {
+    val kotlinxCoroutinesCoreVersion = project.findProperty("kotlinxCoroutinesCoreVersion") as String
+
     implementation(project(":core"))
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxCoroutinesCoreVersion")
 }
 
 android {
@@ -36,7 +37,9 @@ android {
         }
     }
     dependencies {
-        implementation("androidx.appcompat:appcompat:1.5.1")
+        val androidxAppcompatVersion = project.findProperty("androidxAppcompatVersion")
+
+        implementation("androidx.appcompat:appcompat:$androidxAppcompatVersion")
         implementation(project(":kson"))
     }
 }

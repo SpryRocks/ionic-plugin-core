@@ -20,6 +20,10 @@ allprojects {
 }
 
 extra.apply {
+    set("kotlinxCoroutinesCoreVersion", "1.6.4")
+    set("kotlinxSerializationJsonVersion", "1.5.0")
+    set("kotlinxAtomicfuVersion", "0.20.1")
+    set("androidxAppcompatVersion", "1.6.1")
     set("mavenGroup", "com.github.SpryRocks.ionic-plugin-core")
-    set("mavenVersion", "0.0.7-alpha.2")
+    set("mavenVersion", "0.0.7-alpha.3")
 }
