@@ -63,5 +63,7 @@ internal constructor(
 
     override fun mutate() = MutableJsonObject(map.toMutableMap())
 
+    override fun has(key: String) = map.containsKey(key)
+
     override fun toString() = Json.encodeToString(map)
 }
