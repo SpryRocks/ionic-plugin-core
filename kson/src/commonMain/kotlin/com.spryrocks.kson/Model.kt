@@ -34,6 +34,8 @@ interface IJsonObject : IJsonElement, IJsonObjectProperties {
 
     fun mutate(): MutableJsonObject
 
+    fun has(key: String): Boolean
+
     override fun toString(): String
 }
 
