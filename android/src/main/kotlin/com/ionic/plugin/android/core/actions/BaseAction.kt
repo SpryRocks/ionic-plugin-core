@@ -2,11 +2,13 @@ package com.ionic.plugin.android.core.actions
 
 import android.app.Activity
 import com.ionic.plugin.android.core.WrapperDelegate
+import com.ionic.plugin.android.core.utils.IActivityProvider
 import com.ionic.plugin.core.actions.Mappers
 
-abstract class BaseAction<TDelegate : Delegate<TMappers>, TWrapperDelegate : WrapperDelegate, TMappers : Mappers> :
-    com.ionic.plugin.core.actions.BaseAction<TDelegate, TMappers>() {
-    open val activity: Activity
+abstract class BaseAction<TDelegate : Delegate<TMappers>, TWrapperDelegate : WrapperDelegate, TMappers : Mappers>
+    : com.ionic.plugin.core.actions.BaseAction<TDelegate, TMappers>(),
+    IActivityProvider {
+    override val activity: Activity
         get() {
             val call = this.call
             if (call is CallContext) {
