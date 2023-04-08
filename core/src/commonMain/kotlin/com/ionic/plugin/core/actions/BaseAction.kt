@@ -1,13 +1,18 @@
 package com.ionic.plugin.core.actions
 
 import com.ionic.plugin.core.PluginException
+import com.ionic.plugin.core.utils.defaultCoroutineContext
 import kotlinx.atomicfu.atomic
 import kotlinx.atomicfu.locks.SynchronizedObject
 import kotlinx.atomicfu.locks.synchronized
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlin.coroutines.CoroutineContext
 import kotlin.js.JsExport
 
 @JsExport
-abstract class BaseAction<TDelegate : Delegate<TMappers>, TMappers: Mappers> : Action {
+abstract class BaseAction<TDelegate : Delegate<TMappers>, TMappers : Mappers> : Action, CoroutineScope {
     private var _callback: PluginCallback<TDelegate, BaseAction<TDelegate, TMappers>, TMappers>? = null
     private val callback get() = _callback!!
 
@@ -63,6 +68,18 @@ abstract class BaseAction<TDelegate : Delegate<TMappers>, TMappers: Mappers> : A
             block()
         } catch (error: Throwable) {
             error(error)
+        }
+    }
+
+    override val coroutineContext = Job()
+
+    protected fun executeSuspend(context: CoroutineContext = defaultCoroutineContext, block: suspend () -> Unit) {
+        launch(coroutineContext) {
+            try {
+                block()
+            } catch (e: Throwable) {
+                error(e)
+            }
         }
     }
 
