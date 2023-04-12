@@ -28,11 +28,10 @@ open class ErrorMapper {
     open fun mapToJson(error: Throwable): JsonObject? {
         if (error !is PluginException) return null
 
-        val code = error.code
-
-        val jsonObject = MutableJsonObject()
-        code?.let { jsonObject.put("code", it) }
-        return jsonObject
+        return MutableJsonObject().apply {
+            error.message?.let { put("message", it) }
+            error.code?.let { put("code", it) }
+        }
     }
 
     open fun reportError(error: Throwable?, callContext: CallContext, finish: Boolean) {
