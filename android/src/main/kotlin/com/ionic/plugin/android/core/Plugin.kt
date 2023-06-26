@@ -5,6 +5,7 @@ import android.content.Context
 import com.ionic.plugin.android.core.utils.IActivityProvider
 import com.ionic.plugin.android.core.utils.IContextProvider
 import com.ionic.plugin.core.actions.Mappers
+import com.spryrocks.kson.JsonObject
 import com.ionic.plugin.core.actions.Delegate as CoreDelegate
 
 abstract class Plugin<TActionKey, TDelegate : CoreDelegate<TMappers>, TMappers : Mappers>
@@ -15,4 +16,8 @@ abstract class Plugin<TActionKey, TDelegate : CoreDelegate<TMappers>, TMappers :
 
     override val activity: Activity get() = wrapperDelegate.activity
     override val context: Context get() = activity
+
+    public override fun sendEvent(name: String, data: JsonObject) {
+        wrapperDelegate.sendEvent(name, data)
+    }
 }

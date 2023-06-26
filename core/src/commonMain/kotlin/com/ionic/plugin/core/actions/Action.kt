@@ -1,6 +1,8 @@
 package com.ionic.plugin.core.actions
 
-interface Action
+import com.ionic.plugin.core.logger.WithLogger
+
+interface Action : WithLogger
 
 interface CancelableAction : Action {
     fun cancel()
