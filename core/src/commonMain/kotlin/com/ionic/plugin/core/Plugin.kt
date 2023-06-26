@@ -1,6 +1,9 @@
 package com.ionic.plugin.core
 
 import com.ionic.plugin.core.actions.*
+import com.ionic.plugin.core.logger.*
+import com.spryrocks.kson.JsonObject
+import com.spryrocks.kson.mutableJsonObject
 import kotlinx.atomicfu.locks.SynchronizedObject
 import kotlinx.atomicfu.locks.synchronized
 import kotlinx.coroutines.CoroutineScope
@@ -9,8 +12,11 @@ import kotlin.coroutines.CoroutineContext
 import kotlin.js.JsExport
 
 @JsExport
-abstract class Plugin<TActionKey, TDelegate : Delegate<TMappers>, TMappers: Mappers>
-protected constructor() : PluginCallback<TDelegate, BaseAction<TDelegate, TMappers>, TMappers>, CoroutineScope {
+abstract class Plugin<TActionKey, TDelegate : Delegate<TMappers>, TMappers : Mappers>
+protected constructor() :
+    PluginCallback<TDelegate, BaseAction<TDelegate, TMappers>, TMappers>,
+    CoroutineScope,
+    WithLogger {
     private val _actionsLockObject = SynchronizedObject()
 
     protected abstract val delegate: TDelegate
@@ -75,4 +81,22 @@ protected constructor() : PluginCallback<TDelegate, BaseAction<TDelegate, TMappe
     private fun setupAction(action: BaseAction<TDelegate, TMappers>, call: CallContext) {
         action.initialize(call, this, delegate)
     }
+
+    protected abstract fun sendEvent(name: String, data: JsonObject)
+
+    override fun sendLog(action: String?, tag: String?, type: LogType, message: String, params: Array<out LogParam>) {
+        val paramsJsonArray = mutableJsonObject().apply {
+            params.forEach { put(it.first, it.second.toString()) }
+        }
+        val data = mutableJsonObject().apply {
+            put("type", type.value)
+            action?.let { put("action", it) }
+            tag?.let { put("tag", it) }
+            put("message", message)
+            put("params", paramsJsonArray)
+        }
+        sendEvent("log", data)
+    }
+
+    override fun logger(tag: String?): ILogger = Logger(null, tag, this)
 }

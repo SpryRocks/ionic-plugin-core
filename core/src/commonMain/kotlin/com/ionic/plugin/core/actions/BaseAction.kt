@@ -1,6 +1,7 @@
 package com.ionic.plugin.core.actions
 
 import com.ionic.plugin.core.PluginException
+import com.ionic.plugin.core.logger.*
 import com.ionic.plugin.core.utils.defaultCoroutineContext
 import kotlinx.atomicfu.atomic
 import kotlinx.atomicfu.locks.SynchronizedObject
@@ -147,4 +148,18 @@ abstract class BaseAction<TDelegate : Delegate<TMappers>, TMappers : Mappers> : 
     private enum class State {
         NONE, RUNNING, FINISHED
     }
+
+    override fun logger(tag: String?): ILogger = Logger(
+        this@BaseAction::class.simpleName,
+        tag,
+        object : IPluginLogger {
+            override fun sendLog(
+                action: String?,
+                tag: String?,
+                type: LogType,
+                message: String,
+                params: Array<out LogParam>
+            ) = callback.sendLog(action, tag, type, message, params)
+        },
+    )
 }
