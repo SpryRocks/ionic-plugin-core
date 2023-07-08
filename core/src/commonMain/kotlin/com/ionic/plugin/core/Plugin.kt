@@ -82,20 +82,18 @@ protected constructor() :
         action.initialize(call, this, delegate)
     }
 
-    protected abstract fun sendEvent(name: String, data: JsonObject)
-
-    override fun sendLog(action: String?, tag: String?, type: LogType, message: String, params: Array<out LogParam>) {
+    override fun sendLog(action: String?, tag: String?, level: LogLevel, message: String, params: Array<out LogParam>) {
         val paramsJsonArray = mutableJsonObject().apply {
             params.forEach { put(it.first, it.second.toString()) }
         }
         val data = mutableJsonObject().apply {
-            put("type", type.value)
+            put("level", level.value)
             action?.let { put("action", it) }
             tag?.let { put("tag", it) }
             put("message", message)
             put("params", paramsJsonArray)
         }
-        sendEvent("log", data)
+        wrapperDelegate.sendEvent("log", data)
     }
 
     override fun logger(tag: String?): ILogger = Logger(null, tag, this)

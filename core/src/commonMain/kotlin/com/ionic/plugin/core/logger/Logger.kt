@@ -6,19 +6,19 @@ class Logger(
     private val pluginLogger: IPluginLogger,
 ) : ILogger {
     override fun warning(message: String, vararg params: LogParam) {
-        pluginLogger.sendLog(action, tag, LogType.Warning, message, params)
+        pluginLogger.sendLog(action, tag, LogLevel.Warning, message, params)
     }
 
     override fun debug(message: String, vararg params: LogParam) {
-        pluginLogger.sendLog(action, tag, LogType.Debug, message, params)
+        pluginLogger.sendLog(action, tag, LogLevel.Debug, message, params)
     }
 
     override fun info(message: String, vararg params: LogParam) {
-        pluginLogger.sendLog(action, tag, LogType.Info, message, params)
+        pluginLogger.sendLog(action, tag, LogLevel.Info, message, params)
     }
 
     override fun error(message: String, vararg params: LogParam) {
-        pluginLogger.sendLog(action, tag, LogType.Error, message, params)
+        pluginLogger.sendLog(action, tag, LogLevel.Error, message, params)
     }
 
     override fun tag(tag: String): ILogger {
