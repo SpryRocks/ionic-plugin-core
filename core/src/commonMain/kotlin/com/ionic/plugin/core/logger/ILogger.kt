@@ -6,7 +6,7 @@ interface WithLogger {
 
 typealias LogParam = Pair<String, Any>
 
-enum class LogType(val value: String) {
+enum class LogLevel(val value: String) {
     Warning("Warning"),
     Debug("Warning"),
     Info("Info"),
@@ -22,5 +22,5 @@ interface ILogger {
 }
 
 interface IPluginLogger {
-    fun sendLog(action: String?, tag: String?, type: LogType, message: String, params: Array<out LogParam>)
+    fun sendLog(action: String?, tag: String?, level: LogLevel, message: String, params: Array<out LogParam>)
 }

@@ -156,10 +156,10 @@ abstract class BaseAction<TDelegate : Delegate<TMappers>, TMappers : Mappers> : 
             override fun sendLog(
                 action: String?,
                 tag: String?,
-                type: LogType,
+                level: LogLevel,
                 message: String,
                 params: Array<out LogParam>
-            ) = callback.sendLog(action, tag, type, message, params)
+            ) = callback.sendLog(action, tag, level, message, params)
         },
     )
 }
