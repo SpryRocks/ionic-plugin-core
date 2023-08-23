@@ -6,8 +6,7 @@
       <GradleProjectSettings>
         <option name="distributionType" value="WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="gradleHome" value="/usr/local/Cellar/gradle/7.3.3/libexec" />
-        <option name="gradleJvm" value="#JAVA_HOME" />
+        <option name="gradleJvm" value="zulu-15" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
