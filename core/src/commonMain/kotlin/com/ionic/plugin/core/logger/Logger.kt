@@ -21,6 +21,10 @@ class Logger(
         pluginLogger.sendLog(action, tag, LogLevel.Error, message, params)
     }
 
+    override fun trace(message: String, vararg params: LogParam) {
+        pluginLogger.sendLog(action, tag, LogLevel.Trace, message, params)
+    }
+
     override fun tag(tag: String): ILogger {
         return Logger(action, tag, pluginLogger)
     }
