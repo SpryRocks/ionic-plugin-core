@@ -3,6 +3,7 @@ package com.ionic.plugin.core.actions
 import com.ionic.plugin.core.PluginException
 import com.ionic.plugin.core.logger.*
 import com.ionic.plugin.core.utils.defaultCoroutineContext
+import com.spryrocks.kson.JsonObject
 import kotlinx.atomicfu.atomic
 import kotlinx.atomicfu.locks.SynchronizedObject
 import kotlinx.atomicfu.locks.synchronized
@@ -162,4 +163,8 @@ abstract class BaseAction<TDelegate : Delegate<TMappers>, TMappers : Mappers> : 
             ) = callback.sendLog(action, tag, level, message, params)
         },
     )
+
+    fun sendEvent(name: String, data: JsonObject) {
+        callback.sendEvent(name, data)
+    }
 }
