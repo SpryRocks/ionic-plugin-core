@@ -82,6 +82,10 @@ protected constructor() :
         action.initialize(call, this, delegate)
     }
 
+    override fun sendEvent(name: String, data: JsonObject) {
+        wrapperDelegate.sendEvent(name, data)
+    }
+
     override fun sendLog(action: String?, tag: String?, level: LogLevel, message: String, params: Array<out LogParam>) {
         val paramsJsonArray = mutableJsonObject().apply {
             params.forEach { put(it.first, it.second.toString()) }
@@ -93,7 +97,7 @@ protected constructor() :
             put("message", message)
             put("params", paramsJsonArray)
         }
-        wrapperDelegate.sendEvent("log", data)
+        sendEvent("log", data)
     }
 
     override fun logger(tag: String?): ILogger = Logger(null, tag, this)

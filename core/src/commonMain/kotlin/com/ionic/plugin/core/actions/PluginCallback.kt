@@ -1,6 +1,7 @@
 package com.ionic.plugin.core.actions
 
 import com.ionic.plugin.core.logger.IPluginLogger
+import com.spryrocks.kson.JsonObject
 
 interface PluginCallback<
         TDelegate : Delegate<TMappers>,
@@ -10,4 +11,5 @@ interface PluginCallback<
     fun reportSuccess(data: Any?, call: CallContext, finish: Boolean)
     fun reportError(error: Throwable?, call: CallContext, finish: Boolean)
     fun finishActionSafely(action: TAction)
+    fun sendEvent(name: String, data: JsonObject)
 }
