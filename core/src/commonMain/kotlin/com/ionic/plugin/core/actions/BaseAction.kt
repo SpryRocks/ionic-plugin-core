@@ -1,9 +1,12 @@
 package com.ionic.plugin.core.actions
 
 import com.ionic.plugin.core.PluginException
+import com.ionic.plugin.core.base.Context
+import com.ionic.plugin.core.base.ContextWithCall
+import com.ionic.plugin.core.events.EventBase
+import com.ionic.plugin.core.events.IEventSender
 import com.ionic.plugin.core.logger.*
 import com.ionic.plugin.core.utils.defaultCoroutineContext
-import com.spryrocks.kson.JsonObject
 import kotlinx.atomicfu.atomic
 import kotlinx.atomicfu.locks.SynchronizedObject
 import kotlinx.atomicfu.locks.synchronized
@@ -14,28 +17,8 @@ import kotlin.coroutines.CoroutineContext
 import kotlin.js.JsExport
 
 @JsExport
-abstract class BaseAction<TDelegate : Delegate<TMappers>, TMappers : Mappers> : Action, CoroutineScope {
-    private var _callback: PluginCallbackInternal<TDelegate, BaseAction<TDelegate, TMappers>, TMappers>? = null
-    private val callback get() = _callback!!
-
-    private var _call: CallContext? = null
-    protected val call: CallContext
-        get() = _call!!
-
-    private var _delegate: TDelegate? = null
-    val delegate: TDelegate
-        get() = _delegate!!
-
-    internal fun initialize(
-        call: CallContext,
-        callback: PluginCallbackInternal<TDelegate, BaseAction<TDelegate, TMappers>, TMappers>,
-        delegate: TDelegate,
-    ) {
-        _call = call
-        _callback = callback
-        _delegate = delegate
-    }
-
+abstract class BaseAction<TDelegate : Delegate<TMappers>, TMappers : Mappers>
+    : ContextWithCall<TDelegate, TMappers>(), Action, CoroutineScope, IEventSender<TDelegate, TMappers> {
     private val _lock = SynchronizedObject()
 
     private var state = atomic(State.NONE)
@@ -153,7 +136,7 @@ abstract class BaseAction<TDelegate : Delegate<TMappers>, TMappers : Mappers> : 
     override fun logger(tag: String?): ILogger = Logger(
         this@BaseAction::class.simpleName,
         tag,
-        object : IPluginLogger {
+        object : ILoggerRaw {
             override fun sendLog(
                 action: String?,
                 tag: String?,
@@ -164,7 +147,7 @@ abstract class BaseAction<TDelegate : Delegate<TMappers>, TMappers : Mappers> : 
         },
     )
 
-    fun sendEvent(name: String, data: JsonObject) {
-        callback.sendEvent(name, data)
+    override fun sendEvent(event: EventBase<TDelegate, TMappers>) {
+        callback.sendEvent(event)
     }
 }

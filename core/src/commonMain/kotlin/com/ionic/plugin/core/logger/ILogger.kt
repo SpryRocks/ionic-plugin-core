@@ -23,6 +23,6 @@ interface ILogger {
     fun tag(tag: String): ILogger
 }
 
-interface IPluginLogger {
+interface ILoggerRaw {
     fun sendLog(action: String?, tag: String?, level: LogLevel, message: String, params: Array<out LogParam>)
 }

@@ -1,9 +1,9 @@
 package com.ionic.plugin.core
 
 import com.ionic.plugin.core.actions.*
+import com.ionic.plugin.core.events.EventBase
+import com.ionic.plugin.core.events.IEventSender
 import com.ionic.plugin.core.logger.*
-import com.spryrocks.kson.JsonObject
-import com.spryrocks.kson.mutableJsonObject
 import kotlinx.atomicfu.locks.SynchronizedObject
 import kotlinx.atomicfu.locks.synchronized
 import kotlinx.coroutines.CoroutineScope
@@ -16,7 +16,8 @@ abstract class Plugin<TActionKey, TDelegate : Delegate<TMappers>, TMappers : Map
 protected constructor() :
     CoroutineScope,
     WithLogger,
-    IPluginLogger {
+    IEventSender<TDelegate, TMappers>
+{
     private val _actionsLockObject = SynchronizedObject()
 
     protected abstract val delegate: TDelegate
@@ -73,12 +74,18 @@ protected constructor() :
             }
         }
 
-        override fun sendEvent(name: String, data: JsonObject) {
-            this@Plugin.sendEvent(name, data)
+        override fun sendLog(
+            action: String?,
+            tag: String?,
+            level: LogLevel,
+            message: String,
+            params: Array<out LogParam>
+        ) {
+            sendEvent(LogEvent<TDelegate, TMappers>(action, tag, level, message, params))
         }
 
-        override fun sendLog(action: String?, tag: String?, level: LogLevel, message: String, params: Array<out LogParam>) {
-            this@Plugin.sendLog(action, tag, level, message, params)
+        override fun sendEvent(event: EventBase<TDelegate, TMappers>) {
+            this@Plugin.sendEvent(event)
         }
     }
 
@@ -95,23 +102,10 @@ protected constructor() :
         action.initialize(call, callback, delegate)
     }
 
-    override fun logger(tag: String?): ILogger = Logger(null, tag, this)
+    override fun logger(tag: String?): ILogger = Logger(null, tag, callback)
 
-    fun sendEvent(name: String, data: JsonObject) {
-        wrapperDelegate.sendEvent(name, data)
-    }
-
-    override fun sendLog(action: String?, tag: String?, level: LogLevel, message: String, params: Array<out LogParam>) {
-        val paramsJsonArray = mutableJsonObject().apply {
-            params.forEach { put(it.first, it.second.toString()) }
-        }
-        val data = mutableJsonObject().apply {
-            put("level", level.value)
-            action?.let { put("action", it) }
-            tag?.let { put("tag", it) }
-            put("message", message)
-            put("params", paramsJsonArray)
-        }
-        sendEvent("log", data)
+    override fun sendEvent(event: EventBase<TDelegate, TMappers>) {
+        event.initialize(callback, delegate)
+        wrapperDelegate.sendEvent(event.name, event.getData())
     }
 }
