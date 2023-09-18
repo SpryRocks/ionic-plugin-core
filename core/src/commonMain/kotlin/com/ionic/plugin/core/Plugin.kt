@@ -14,14 +14,20 @@ import kotlin.js.JsExport
 @JsExport
 abstract class Plugin<TActionKey, TDelegate : Delegate<TMappers>, TMappers : Mappers>
 protected constructor() :
-    PluginCallback<TDelegate, BaseAction<TDelegate, TMappers>, TMappers>,
     CoroutineScope,
-    WithLogger {
+    WithLogger,
+    IPluginLogger {
     private val _actionsLockObject = SynchronizedObject()
 
     protected abstract val delegate: TDelegate
 
     abstract val mappers: Mappers
+
+    private var actions: IActions<TDelegate, TMappers>? = null
+
+    fun setActions(actions: IActions<TDelegate, TMappers>) {
+        this.actions = actions
+    }
 
     abstract fun createAction(action: TActionKey, call: CallContext): BaseAction<TDelegate, TMappers>
 
@@ -47,42 +53,51 @@ protected constructor() :
             val baseAction = createAction(action, call)
             setCurrentActionAndRunSafely(baseAction, call)
         } catch (error: Throwable) {
-            reportError(error, call, true)
+            callback.reportError(error, call, true)
         }
         return true
     }
 
-    override fun reportSuccess(data: Any?, call: CallContext, finish: Boolean) {
-        mappers.reportSuccess(data, call, finish)
-    }
+    private val callback = object : PluginCallbackInternal<TDelegate, BaseAction<TDelegate, TMappers>, TMappers> {
+        override fun reportSuccess(data: Any?, call: CallContext, finish: Boolean) {
+            mappers.reportSuccess(data, call, finish)
+        }
 
-    override fun reportError(error: Throwable?, call: CallContext, finish: Boolean) {
-        mappers.reportError(error, call, finish)
+        override fun reportError(error: Throwable?, call: CallContext, finish: Boolean) {
+            mappers.reportError(error, call, finish)
+        }
+
+        override fun finishActionSafely(action: BaseAction<TDelegate, TMappers>) {
+            synchronized(_actionsLockObject) {
+                actions?.actionFinished(action)
+            }
+        }
+
+        override fun sendEvent(name: String, data: JsonObject) {
+            this@Plugin.sendEvent(name, data)
+        }
+
+        override fun sendLog(action: String?, tag: String?, level: LogLevel, message: String, params: Array<out LogParam>) {
+            this@Plugin.sendLog(action, tag, level, message, params)
+        }
     }
 
     @Throws(PluginException::class)
     private fun setCurrentActionAndRunSafely(action: BaseAction<TDelegate, TMappers>, call: CallContext) {
         setupAction(action, call)
         synchronized(_actionsLockObject) {
-            beforeActionRun(action)
+            actions?.beforeActionRun(action)
         }
         action.run()
     }
 
-    override fun finishActionSafely(action: BaseAction<TDelegate, TMappers>) {
-        synchronized(_actionsLockObject) {
-            actionFinished(action)
-        }
-    }
-
-    protected open fun beforeActionRun(action: BaseAction<TDelegate, TMappers>) {}
-    protected open fun actionFinished(action: BaseAction<TDelegate, TMappers>) {}
-
     private fun setupAction(action: BaseAction<TDelegate, TMappers>, call: CallContext) {
-        action.initialize(call, this, delegate)
+        action.initialize(call, callback, delegate)
     }
 
-    override fun sendEvent(name: String, data: JsonObject) {
+    override fun logger(tag: String?): ILogger = Logger(null, tag, this)
+
+    fun sendEvent(name: String, data: JsonObject) {
         wrapperDelegate.sendEvent(name, data)
     }
 
@@ -99,6 +114,4 @@ protected constructor() :
         }
         sendEvent("log", data)
     }
-
-    override fun logger(tag: String?): ILogger = Logger(null, tag, this)
 }

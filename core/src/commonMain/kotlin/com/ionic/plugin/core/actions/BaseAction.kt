@@ -15,7 +15,7 @@ import kotlin.js.JsExport
 
 @JsExport
 abstract class BaseAction<TDelegate : Delegate<TMappers>, TMappers : Mappers> : Action, CoroutineScope {
-    private var _callback: PluginCallback<TDelegate, BaseAction<TDelegate, TMappers>, TMappers>? = null
+    private var _callback: PluginCallbackInternal<TDelegate, BaseAction<TDelegate, TMappers>, TMappers>? = null
     private val callback get() = _callback!!
 
     private var _call: CallContext? = null
@@ -28,7 +28,7 @@ abstract class BaseAction<TDelegate : Delegate<TMappers>, TMappers : Mappers> : 
 
     internal fun initialize(
         call: CallContext,
-        callback: PluginCallback<TDelegate, BaseAction<TDelegate, TMappers>, TMappers>,
+        callback: PluginCallbackInternal<TDelegate, BaseAction<TDelegate, TMappers>, TMappers>,
         delegate: TDelegate,
     ) {
         _call = call
