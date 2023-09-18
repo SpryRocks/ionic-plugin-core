@@ -3,7 +3,7 @@ package com.ionic.plugin.core.logger
 class Logger(
     private val action: String?,
     private val tag: String?,
-    private val pluginLogger: IPluginLogger,
+    private val pluginLogger: ILoggerRaw,
 ) : ILogger {
     override fun warning(message: String, vararg params: LogParam) {
         pluginLogger.sendLog(action, tag, LogLevel.Warning, message, params)
