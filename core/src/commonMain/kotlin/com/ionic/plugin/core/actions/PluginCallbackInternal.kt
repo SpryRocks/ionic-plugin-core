@@ -3,7 +3,7 @@ package com.ionic.plugin.core.actions
 import com.ionic.plugin.core.logger.IPluginLogger
 import com.spryrocks.kson.JsonObject
 
-interface PluginCallback<
+interface PluginCallbackInternal<
         TDelegate : Delegate<TMappers>,
         TAction : BaseAction<TDelegate, TMappers>,
         TMappers : Mappers,
