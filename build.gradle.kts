@@ -25,5 +25,5 @@ extra.apply {
     set("kotlinxAtomicfuVersion", "0.22.0")
     set("androidxAppcompatVersion", "1.6.1")
     set("mavenGroup", "com.github.SpryRocks.ionic-plugin-core")
-    set("mavenVersion", "0.1.4-alpha.10")
+    set("mavenVersion", "0.1.5-alpha.2")
 }

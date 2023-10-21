@@ -18,7 +18,19 @@ class Logger(
     }
 
     override fun error(message: String, vararg params: LogParam) {
-        pluginLogger.sendLog(action, tag, LogLevel.Error, message, params)
+        errorInternal(message, null, params)
+    }
+
+    override fun error(error: Throwable, vararg params: LogParam) {
+        errorInternal(null, error, params)
+    }
+
+    override fun error(message: String, error: Throwable, vararg params: LogParam) {
+        errorInternal(message, error, params)
+    }
+
+    private fun errorInternal(message: String?, error: Throwable?, params: Array<out LogParam>) {
+        pluginLogger.sendLog(action, tag, LogLevel.Error, message ?: error?.message ?: "Unknown error", params)
     }
 
     override fun trace(message: String, vararg params: LogParam) {
