@@ -4,7 +4,7 @@ interface WithLogger {
     fun logger(tag: String? = null): ILogger
 }
 
-typealias LogParam = Pair<String, Any>
+typealias LogParam = Pair<String, Any?>
 
 enum class LogLevel(val value: String) {
     Warning("Warning"),
@@ -19,6 +19,8 @@ interface ILogger {
     fun debug(message: String, vararg params: LogParam)
     fun info(message: String, vararg params: LogParam)
     fun error(message: String, vararg params: LogParam)
+    fun error(error: Throwable, vararg params: LogParam)
+    fun error(message: String, error: Throwable, vararg params: LogParam)
     fun trace(message: String, vararg params: LogParam)
     fun tag(tag: String): ILogger
 }
