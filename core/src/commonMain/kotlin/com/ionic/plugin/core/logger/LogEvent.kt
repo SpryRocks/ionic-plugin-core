@@ -17,7 +17,13 @@ class LogEvent<TDelegate : Delegate<TMappers>, TMappers : Mappers>(
 
     override fun getData(): JsonObject {
         val paramsJsonArray = mutableJsonObject().apply {
-            params.forEach { put(it.first, it.second.toString()) }
+            params.forEach {
+                if (it.second == null){
+                    putNull(it.first)
+                } else {
+                    put(it.first, it.second.toString())
+                }
+            }
         }
         return mutableJsonObject().apply {
             put("level", level.value)
