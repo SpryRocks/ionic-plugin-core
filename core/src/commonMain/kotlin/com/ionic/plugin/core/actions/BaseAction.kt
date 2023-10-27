@@ -132,7 +132,7 @@ abstract class BaseAction<TDelegate : Delegate<TMappers>, TMappers : Mappers>
     private enum class State {
         NONE, RUNNING, FINISHED
     }
-
+    
     override fun logger(tag: String?): ILogger = Logger(
         this@BaseAction::class.simpleName,
         tag,
