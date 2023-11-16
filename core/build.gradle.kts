@@ -11,8 +11,7 @@ val enableJS: String by project
 
 kotlin {
     if (enableIos == "true") {
-        ios {
-        }
+        ios {}
     }
 
     jvm {
