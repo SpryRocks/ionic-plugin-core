@@ -27,5 +27,5 @@ internal fun convertFromKJsonElement(kJsonElement: kotlinx.serialization.json.Js
         is kotlinx.serialization.json.JsonArray -> return JsonArray(kJsonElement)
     }
 
-    throw Exception("Unknown type: " + kJsonElement::class.simpleName)
+    throw Exception("Unknown type: ${kJsonElement::class.simpleName}")
 }

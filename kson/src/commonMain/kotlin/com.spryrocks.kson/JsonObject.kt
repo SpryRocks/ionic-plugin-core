@@ -2,7 +2,6 @@ package com.spryrocks.kson
 
 import com.spryrocks.kson.utils.convertFromKJsonElement
 import com.spryrocks.kson.utils.encodeToJsonObject
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import com.spryrocks.kson.utils.require
@@ -32,6 +31,8 @@ internal constructor(
 
     override fun optLong(name: String) = opt(name) as Long?
 
+    override fun optDouble(name: String) = opt(name) as Double?
+
     override fun optBoolean(name: String) = opt(name) as Boolean?
 
     override fun optJsonObject(name: String) = opt(name) as JsonObject?
@@ -51,6 +52,8 @@ internal constructor(
     override fun getFloat(name: String) = require(name, ::optFloat)
 
     override fun getLong(name: String) = require(name, ::optLong)
+
+    override fun getDouble(name: String) = require(name, ::optDouble)
 
     override fun getBoolean(name: String) = require(name, ::optBoolean)
 

@@ -18,7 +18,8 @@ internal constructor(
             is Int -> put(value, index)
             is Float -> put(value, index)
             is Long -> put(value, index)
-            else -> throw NotImplementedError("unknown type")
+            is Double -> put(value, index)
+            else -> throw NotImplementedError("Unknown type: ${value::class.simpleName}")
         }
     }
 
@@ -27,6 +28,8 @@ internal constructor(
     override fun put(value: Float, index: Int?) = putInternal(JsonPrimitive(value), index)
 
     override fun put(value: Long, index: Int?) = putInternal(JsonPrimitive(value), index)
+
+    override fun put(value: Double, index: Int?) = putInternal(JsonPrimitive(value), index)
 
     override fun put(value: Boolean, index: Int?) = putInternal(JsonPrimitive(value), index)
 
@@ -44,7 +47,7 @@ internal constructor(
         is Boolean -> put(value, index)
         is JsonObject -> put(value, index)
         is JsonArray -> put(value, index)
-        else -> throw NotImplementedError("unknown type")
+        else -> throw NotImplementedError("Unknown type: ${value::class.simpleName}")
     }
     //endregion
 

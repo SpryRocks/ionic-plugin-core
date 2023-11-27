@@ -3,7 +3,6 @@ package com.spryrocks.kson
 import com.spryrocks.kson.utils.JsonArrayIterator
 import com.spryrocks.kson.utils.convertFromKJsonElement
 import com.spryrocks.kson.utils.encodeToJsonArray
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import com.spryrocks.kson.utils.require
@@ -17,11 +16,12 @@ internal constructor(
 
         fun fromList(list: List<kotlinx.serialization.json.JsonElement>) = JsonArray(list)
 
+        @Suppress("unused")
         inline fun <reified T> fromObject(data: T) = fromList(encodeToJsonArray(data))
     }
 
     //region opt
-    override fun opt(index: Int) = list[index]?.let { convertFromKJsonElement(it) }
+    override fun opt(index: Int) = convertFromKJsonElement(list[index])
 
     override fun optString(index: Int) = opt(index) as String?
 
@@ -32,6 +32,8 @@ internal constructor(
     override fun optFloat(index: Int) = opt(index) as Float?
 
     override fun optLong(index: Int) = opt(index) as Long?
+
+    override fun optDouble(index: Int) = opt(index) as Double?
 
     override fun optBoolean(index: Int) = opt(index) as Boolean?
 
@@ -52,6 +54,8 @@ internal constructor(
     override fun getFloat(index: Int) = require(index, ::optFloat)
 
     override fun getLong(index: Int) = require(index, ::optLong)
+
+    override fun getDouble(index: Int) = require(index, ::optDouble)
 
     override fun getBoolean(index: Int) = require(index, ::optBoolean)
 
