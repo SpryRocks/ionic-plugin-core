@@ -14,6 +14,7 @@ interface IJsonObjectProperties {
     fun optInt(name: String): Int?
     fun optFloat(name: String): Float?
     fun optLong(name: String): Long?
+    fun optDouble(name: String): Double?
     fun optBoolean(name: String): Boolean?
     fun optJsonObject(name: String): JsonObject?
     fun optJsonArray(name: String): JsonArray?
@@ -24,6 +25,7 @@ interface IJsonObjectProperties {
     fun getInt(name: String): Int
     fun getFloat(name: String): Float
     fun getLong(name: String): Long
+    fun getDouble(name: String): Double
     fun getBoolean(name: String): Boolean
     fun getJsonObject(name: String): JsonObject
     fun getJsonArray(name: String): JsonArray
@@ -48,6 +50,7 @@ interface IJsonArrayProperties {
     fun optInt(index: Int): Int?
     fun optFloat(index: Int): Float?
     fun optLong(index: Int): Long?
+    fun optDouble(index: Int): Double?
     fun optBoolean(index: Int): Boolean?
     fun optJsonObject(index: Int): JsonObject?
     fun optJsonArray(index: Int): JsonArray?
@@ -58,6 +61,7 @@ interface IJsonArrayProperties {
     fun getInt(index: Int): Int
     fun getFloat(index: Int): Float
     fun getLong(index: Int): Long
+    fun getDouble(index: Int): Double
     fun getBoolean(index: Int): Boolean
     fun getJsonObject(index: Int): JsonObject
     fun getJsonArray(index: Int): JsonArray
@@ -75,6 +79,7 @@ interface IMutableJsonObject : IJsonObject {
     fun put(name: String, value: Int)
     fun put(name: String, value: Float)
     fun put(name: String, value: Long)
+    fun put(name: String, value: Double)
     fun put(name: String, value: Boolean)
     fun put(name: String, value: JsonObject)
     fun put(name: String, value: JsonArray)
@@ -88,6 +93,7 @@ interface IMutableJsonArray : IJsonArray {
     fun put(value: Int, index: Int? = null)
     fun put(value: Float, index: Int? = null)
     fun put(value: Long, index: Int? = null)
+    fun put(value: Double, index: Int? = null)
     fun put(value: Boolean, index: Int? = null)
     fun put(value: JsonObject, index: Int? = null)
     fun put(value: JsonArray, index: Int? = null)
