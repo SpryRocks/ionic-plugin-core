@@ -11,8 +11,8 @@ val enableJS: String by project
 
 kotlin {
     if (enableIos == "true") {
-        ios {
-        }
+        iosArm64()
+        iosSimulatorArm64()
     }
 
     jvm {
@@ -41,19 +41,15 @@ kotlin {
             }
         }
         if (enableJS == "true") {
-            val jsMain by getting {
-                dependsOn(commonMain)
-            }
+//            val jsMain by getting {
+//            }
         }
-        val jvmMain by getting
-        val nativeMain by creating {
-            dependsOn(commonMain)
-            jvmMain.dependsOn(this)
-        }
+//        val jvmMain by getting
+//        val nativeMain by creating {
+//        }
         if (enableIos == "true") {
-            val iosMain by getting {
-                dependsOn(nativeMain)
-            }
+//            val iosMain by getting {
+//            }
         }
     }
 }
