@@ -11,7 +11,8 @@ val enableJS: String by project
 
 kotlin {
     if (enableIos == "true") {
-        ios {}
+        iosArm64()
+        iosSimulatorArm64()
     }
 
     jvm {
@@ -24,7 +25,7 @@ kotlin {
     }
 
     sourceSets {
-        val commonMain by getting {
+        commonMain {
             dependencies {
                 val kotlinxCoroutinesCoreVersion = project.findProperty("kotlinxCoroutinesCoreVersion") as String
                 val kotlinxSerializationJsonVersion = project.findProperty("kotlinxSerializationJsonVersion") as String
@@ -37,19 +38,16 @@ kotlin {
             }
         }
         if (enableJS == "true") {
-            val jsMain by getting {
-                dependsOn(commonMain)
-            }
+//            jsMain {
+//            }
         }
-        val jvmMain by getting
-        val nativeMain by creating {
-            dependsOn(commonMain)
-            jvmMain.dependsOn(this)
-        }
+//        val jvmMain by getting
+//        val nativeMain by creating {
+//        }
         if (enableIos == "true") {
-            val iosMain by getting {
-                dependsOn(nativeMain)
-            }
+//            val iosMain by getting {
+//                dependsOn(nativeMain)
+//            }
         }
     }
 }
