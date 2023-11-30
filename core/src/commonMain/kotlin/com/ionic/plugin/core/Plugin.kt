@@ -54,20 +54,12 @@ protected constructor() :
             val baseAction = createAction(action, call)
             setCurrentActionAndRunSafely(baseAction, call)
         } catch (error: Throwable) {
-            callback.reportError(error, call, true)
+            mappers.reportError(error, call, true)
         }
         return true
     }
 
     private val callback = object : PluginCallbackInternal<TDelegate, BaseAction<TDelegate, TMappers>, TMappers> {
-        override fun reportSuccess(data: Any?, call: CallContext, finish: Boolean) {
-            mappers.reportSuccess(data, call, finish)
-        }
-
-        override fun reportError(error: Throwable?, call: CallContext, finish: Boolean) {
-            mappers.reportError(error, call, finish)
-        }
-
         override fun finishActionSafely(action: BaseAction<TDelegate, TMappers>) {
             synchronized(_actionsLockObject) {
                 actions?.actionFinished(action)
