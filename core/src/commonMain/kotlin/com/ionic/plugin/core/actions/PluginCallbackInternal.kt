@@ -10,7 +10,5 @@ interface PluginCallbackInternal<
         > :
     ILoggerRaw,
     IEventSender<TDelegate, TMappers> {
-    fun reportSuccess(data: Any?, call: CallContext, finish: Boolean)
-    fun reportError(error: Throwable?, call: CallContext, finish: Boolean)
     fun finishActionSafely(action: TAction)
 }
