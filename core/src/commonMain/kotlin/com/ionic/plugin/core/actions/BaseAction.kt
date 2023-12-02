@@ -72,11 +72,11 @@ abstract class BaseAction<TDelegate : Delegate<TMappers>, TMappers : Mappers>
     protected abstract fun onExecute()
 
     fun success(data: Any? = null, finish: Boolean = true) = resultSafely(finish) {
-        delegate.mappers.reportSuccess(data, call, finish)
+        mappers.reportSuccess(data, call, finish)
     }
 
     fun error(error: Throwable? = null, finish: Boolean = true) = resultSafely(finish) {
-        delegate.mappers.reportError(error, call, finish)
+        mappers.reportError(error, call, finish)
     }
 
     private fun resultSafely(finish: Boolean, block: () -> Unit) {
