@@ -2,23 +2,23 @@ package com.ionic.plugin.android.core.utils
 
 import android.content.Intent
 
-interface WithActivityResult {
+interface IActivityResult {
   fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?): Boolean
 }
 
 interface IActivityResultObserver {
-  fun add(receiver: WithActivityResult)
-  fun remove(receiver: WithActivityResult)
+  fun add(receiver: IActivityResult)
+  fun remove(receiver: IActivityResult)
 }
 
-class ActivityResultObserver : IActivityResultObserver, WithActivityResult {
-  private val receivers = mutableListOf<WithActivityResult>()
+class ActivityResultObserver : IActivityResultObserver, IActivityResult {
+  private val receivers = mutableListOf<IActivityResult>()
 
-  override fun add(receiver: WithActivityResult) {
+  override fun add(receiver: IActivityResult) {
     receivers.add(receiver)
   }
 
-  override fun remove(receiver: WithActivityResult) {
+  override fun remove(receiver: IActivityResult) {
     receivers.remove(receiver)
   }
 

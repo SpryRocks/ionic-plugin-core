@@ -4,7 +4,7 @@ import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
-class SuspendCoroutineCallbacks<T> {
+class ContinuationCallback<T> {
     private var continuation: Continuation<T>? = null
 
     fun register(continuation: Continuation<T>) {
@@ -20,5 +20,13 @@ class SuspendCoroutineCallbacks<T> {
     fun resumeWithException(exception: Throwable) {
         continuation?.resumeWithException(exception)
         continuation = null
+    }
+}
+
+fun <T> Continuation<T>.wrapSafely(block: () -> T) {
+    try {
+        resume(block())
+    } catch (e: Throwable) {
+        resumeWithException(e)
     }
 }
