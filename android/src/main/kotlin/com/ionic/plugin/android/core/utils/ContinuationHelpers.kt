@@ -20,6 +20,7 @@ fun <T> registerContinuationActivityResult(
             it.wrapSafely {
                 return@wrapSafely block(requestCode, resultCode, data)
             }
+            activityResultObserver.remove(this)
             return true
         }
     })
