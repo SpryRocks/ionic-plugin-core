@@ -8,14 +8,14 @@ open class PluginExceptionBase(
 ) : RuntimeException(message, cause)
 
 @JsExport
-open class PluginException(
+open class PluginExceptionOld(
     message: String? = null,
     val code: Int? = null,
     cause: Throwable? = null,
 ) : PluginExceptionBase(message, cause)
 
 @JsExport
-open class PluginExceptionNew(
+open class PluginException(
     message: String? = null,
     val code: String? = null,
     cause: Throwable? = null,
