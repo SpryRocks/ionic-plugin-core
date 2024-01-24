@@ -1,8 +1,8 @@
 package com.ionic.plugin.core.actions
 
-import com.ionic.plugin.core.PluginException
+import com.ionic.plugin.core.PluginExceptionOld
 import com.ionic.plugin.core.PluginExceptionBase
-import com.ionic.plugin.core.PluginExceptionNew
+import com.ionic.plugin.core.PluginException
 import com.ionic.plugin.core.logger.LogParam
 import com.spryrocks.kson.*
 import kotlin.js.JsExport
@@ -32,10 +32,10 @@ open class ErrorMapper {
     open fun mapToJson(error: Throwable): JsonObject? {
         return MutableJsonObject().apply {
             error.message?.let { put("message", it) }
-            if (error is PluginException) {
+            if (error is PluginExceptionOld) {
                 error.code?.let { put("code", it) }
             }
-            if (error is PluginExceptionNew) {
+            if (error is PluginException) {
                 error.code?.let { put("code", it) }
             }
         }
