@@ -7,12 +7,16 @@ import android.content.Intent
 import android.content.IntentFilter
 import com.ionic.plugin.core.utils.wrapSafely
 import kotlin.coroutines.Continuation
+import kotlin.coroutines.suspendCoroutine
+
+typealias ActivityResultTest = (requestCode: Int, resultCode: Int, data: Intent?) -> Boolean
+typealias ActivityResultBlock<T> = (requestCode: Int, resultCode: Int, data: Intent?) -> T
 
 fun <T> registerContinuationActivityResult(
     activityResultObserver: IActivityResultObserver,
     it: Continuation<T>,
-    test: (requestCode: Int, resultCode: Int, data: Intent?) -> Boolean,
-    block: (requestCode: Int, resultCode: Int, data: Intent?) -> T,
+    test: ActivityResultTest,
+    block: ActivityResultBlock<T>,
 ) {
     activityResultObserver.add(object : IActivityResult {
         override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?): Boolean {
@@ -24,6 +28,14 @@ fun <T> registerContinuationActivityResult(
             return true
         }
     })
+}
+
+suspend fun <T> suspendActivityResult(
+    activityResultObserver: IActivityResultObserver,
+    test: ActivityResultTest,
+    block: ActivityResultBlock<T>,
+): T = suspendCoroutine {
+    registerContinuationActivityResult(activityResultObserver, it, test, block)
 }
 
 fun <T> registerReceiver(
