@@ -5,7 +5,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import com.ionic.plugin.core.utils.wrapSafely
+import com.ionic.plugin.core.utils.resumeSafely
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.suspendCoroutine
 
@@ -21,9 +21,7 @@ fun <T> registerContinuationActivityResult(
     activityResultObserver.add(object : IActivityResult {
         override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?): Boolean {
             if (!test(requestCode, resultCode, data)) return false
-            it.wrapSafely {
-                return@wrapSafely block(requestCode, resultCode, data)
-            }
+            it.resumeSafely { block(requestCode, resultCode, data) }
             activityResultObserver.remove(this)
             return true
         }
@@ -59,6 +57,6 @@ fun <T> registerContinuationReceiver(
     block: (intent: Intent) -> T,
 ) {
     registerReceiver(activity, action) { intent ->
-        it.wrapSafely { block(intent) }
+        it.resumeSafely { block(intent) }
     }
 }

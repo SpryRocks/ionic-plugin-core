@@ -24,7 +24,7 @@ class ContinuationCallback<T> {
     }
 }
 
-fun <T> Continuation<T>.wrapSafely(block: () -> T) {
+fun <T> Continuation<T>.resumeSafely(block: () -> T) {
     try {
         if (this.context.isActive) {
             resume(block())
