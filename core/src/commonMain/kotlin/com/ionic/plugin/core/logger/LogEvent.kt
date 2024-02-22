@@ -8,7 +8,7 @@ import com.spryrocks.kson.mutableJsonObject
 class LogEvent<TDelegate : Delegate<TMappers>, TMappers : Mappers>(
     private val action: String?,
     private val tag: String?,
-    private val level: LogLevel,
+    val level: LogLevel,
     private val message: String,
     private val params: Array<out LogParam>,
 ) : EventBase<TDelegate, TMappers>() {

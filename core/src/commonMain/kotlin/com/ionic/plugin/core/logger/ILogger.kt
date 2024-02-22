@@ -1,5 +1,7 @@
 package com.ionic.plugin.core.logger
 
+import com.ionic.plugin.core.PluginException
+
 interface WithLogger {
     fun logger(tag: String? = null): ILogger
 }
@@ -12,6 +14,15 @@ enum class LogLevel(val value: String) {
     Info("Info"),
     Error("Error"),
     Trace("Trace"),
+
+    ;
+
+    companion object {
+        fun fromValue(value: String) =
+            LogLevel.entries
+                .find { it.value === value }
+                ?: throw PluginException("Log level '$value' not exists")
+    }
 }
 
 interface ILogger {
