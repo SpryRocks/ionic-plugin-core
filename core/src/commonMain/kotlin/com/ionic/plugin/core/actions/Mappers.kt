@@ -3,6 +3,7 @@ package com.ionic.plugin.core.actions
 import com.ionic.plugin.core.PluginExceptionOld
 import com.ionic.plugin.core.PluginExceptionBase
 import com.ionic.plugin.core.PluginException
+import com.ionic.plugin.core.logger.LogLevel
 import com.ionic.plugin.core.logger.LogParam
 import com.spryrocks.kson.*
 import kotlin.js.JsExport
@@ -20,6 +21,15 @@ abstract class Mappers {
 
     abstract val errorMapper: ErrorMapper
     open val logMapper: LogMapper = LogMapper()
+
+    fun mapLogLevelsFromArg(levels: JsonArray?): Array<LogLevel>? {
+        if (levels == null) return null
+        val result = mutableListOf<LogLevel>()
+        for(i in 0 until levels.size) {
+            result.add(LogLevel.fromValue(levels.getString(i)))
+        }
+        return result.toTypedArray()
+    }
 }
 
 @JsExport

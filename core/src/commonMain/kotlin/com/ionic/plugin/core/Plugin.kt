@@ -16,8 +16,7 @@ abstract class Plugin<TActionKey, TDelegate : Delegate<TMappers>, TMappers : Map
 protected constructor() :
     CoroutineScope,
     WithLogger,
-    IEventSender<TDelegate, TMappers>
-{
+    IEventSender<TDelegate, TMappers> {
     private val _actionsLockObject = SynchronizedObject()
 
     protected abstract val delegate: TDelegate
@@ -48,11 +47,19 @@ protected constructor() :
         this._wrapperDelegate = wrapperDelegate
     }
 
-    fun call(action: TActionKey, call: CallContext): Boolean {
+    fun call(action: TActionKey, call: CallContext) = wrapActionSafely(call) {
         print("plugin action: $action")
+        val baseAction = createAction(action, call)
+        setCurrentActionAndRunSafely(baseAction, call)
+    }
+
+    fun callAction(baseAction: BaseAction<TDelegate, TMappers>, call: CallContext) = wrapActionSafely(call) {
+        setCurrentActionAndRunSafely(baseAction, call)
+    }
+
+    private fun wrapActionSafely(call: CallContext, block: () -> Unit): Boolean {
         try {
-            val baseAction = createAction(action, call)
-            setCurrentActionAndRunSafely(baseAction, call)
+            block()
         } catch (error: Throwable) {
             mappers.reportError(error, call, true)
         }
@@ -73,11 +80,17 @@ protected constructor() :
             message: String,
             params: Array<out LogParam>
         ) {
-            sendEvent(LogEvent<TDelegate, TMappers>(action, tag, level, message, params))
+            val event = LogEvent<TDelegate, TMappers>(action, tag, level, message, params)
+            if (!testLog(event)) return
+            sendEvent(event)
         }
 
         override fun sendEvent(event: EventBase<TDelegate, TMappers>) {
             this@Plugin.sendEvent(event)
+        }
+
+        override fun setLogLevels(logLevels: Array<LogLevel>?) {
+            this@Plugin.setLogLevels(logLevels)
         }
     }
 
@@ -99,5 +112,16 @@ protected constructor() :
     override fun sendEvent(event: EventBase<TDelegate, TMappers>) {
         event.initialize(callback, delegate)
         wrapperDelegate.sendEvent(event.name, event.getData())
+    }
+
+    private var logLevels: Array<LogLevel>? = null
+
+    fun setLogLevels(logLevels: Array<LogLevel>?) {
+        this.logLevels = logLevels
+    }
+
+    private fun testLog(data: LogEvent<TDelegate, TMappers>): Boolean {
+        val logLevels = this.logLevels ?: return true
+        return logLevels.contains(data.level)
     }
 }
