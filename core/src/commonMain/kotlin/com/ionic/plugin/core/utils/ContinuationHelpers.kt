@@ -1,9 +1,7 @@
 package com.ionic.plugin.core.utils
 
 import kotlinx.coroutines.isActive
-import kotlin.coroutines.Continuation
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.*
 
 class ContinuationCallback<T> {
     private var continuation: Continuation<T>? = null
@@ -24,7 +22,7 @@ class ContinuationCallback<T> {
     }
 }
 
-fun <T> Continuation<T>.resumeSafely(block: () -> T) {
+fun <T> Continuation<T>.wrapAndResumeCatching(block: () -> T) {
     try {
         if (this.context.isActive) {
             resume(block())
@@ -33,5 +31,19 @@ fun <T> Continuation<T>.resumeSafely(block: () -> T) {
         if (this.context.isActive) {
             resumeWithException(e)
         }
+    }
+}
+
+suspend inline fun <T> suspendCoroutineSafely(crossinline block: (Continuation<T>) -> Unit): T {
+    return suspendCoroutine {
+        val wrapper = object : Continuation<T> {
+            override val context get() = it.context
+            override fun resumeWith(result: Result<T>) {
+                if (it.context.isActive) {
+                    it.resumeWith(result)
+                }
+            }
+        }
+        block(wrapper)
     }
 }
