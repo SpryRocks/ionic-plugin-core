@@ -4,7 +4,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        val kotlinVersion = "1.9.22"
+        val kotlinVersion = "1.9.23"
         classpath(kotlin("gradle-plugin", version = kotlinVersion))
         classpath(kotlin("serialization", version = kotlinVersion))
 
@@ -20,10 +20,10 @@ allprojects {
 }
 
 extra.apply {
-    set("kotlinxCoroutinesCoreVersion", "1.7.3")
-    set("kotlinxSerializationJsonVersion", "1.6.2")
+    set("kotlinxCoroutinesCoreVersion", "1.8.0")
+    set("kotlinxSerializationJsonVersion", "1.6.3")
     set("kotlinxAtomicfuVersion", "0.23.2")
     set("androidxAppcompatVersion", "1.6.1")
     set("mavenGroup", "com.github.SpryRocks.ionic-plugin-core")
-    set("mavenVersion", "0.1.16-alpha.0")
+    set("mavenVersion", "0.1.17-alpha.0")
 }
