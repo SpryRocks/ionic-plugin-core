@@ -17,6 +17,7 @@ android {
     compileSdk = 31
     defaultConfig {
         minSdk = 21
+        //noinspection ExpiredTargetSdkVersion support for cap2
         targetSdk = 31
     }
     buildTypes {

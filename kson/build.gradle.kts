@@ -40,17 +40,6 @@ kotlin {
                 implementation(kotlin("test"))
             }
         }
-        if (enableJS == "true") {
-//            val jsMain by getting {
-//            }
-        }
-//        val jvmMain by getting
-//        val nativeMain by creating {
-//        }
-        if (enableIos == "true") {
-//            val iosMain by getting {
-//            }
-        }
     }
 }
 

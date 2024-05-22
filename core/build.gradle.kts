@@ -37,18 +37,6 @@ kotlin {
                 implementation("org.jetbrains.kotlinx:atomicfu:$kotlinxAtomicfuVersion")
             }
         }
-        if (enableJS == "true") {
-//            jsMain {
-//            }
-        }
-//        val jvmMain by getting
-//        val nativeMain by creating {
-//        }
-        if (enableIos == "true") {
-//            val iosMain by getting {
-//                dependsOn(nativeMain)
-//            }
-        }
     }
 }
 
